@@ -3,7 +3,7 @@ package soma.everyonepick.api.core.exception;
 /**
  * 리소스 잘못된 요청 예외 (400 Bad Request)
  */
-public class BadRequestException extends KnowllyException {
+public class BadRequestException extends EveryonepickException {
     public BadRequestException() {
     }
 

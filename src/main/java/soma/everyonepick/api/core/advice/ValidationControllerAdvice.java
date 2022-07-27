@@ -1,12 +1,12 @@
 package soma.everyonepick.api.core.advice;
 
-import kr.co.knowledgerally.api.core.dto.ApiResult;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import soma.everyonepick.api.core.dto.ApiResult;
 
 import javax.annotation.Priority;
 

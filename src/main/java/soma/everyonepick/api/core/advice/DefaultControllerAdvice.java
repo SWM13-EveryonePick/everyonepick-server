@@ -1,11 +1,11 @@
 package soma.everyonepick.api.core.advice;
 
-import kr.co.knowledgerally.api.core.dto.ApiResult;
-import kr.co.knowledgerally.core.core.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import soma.everyonepick.api.core.dto.ApiResult;
+import soma.everyonepick.api.core.exception.*;
 
 import javax.annotation.Priority;
 
@@ -15,7 +15,7 @@ import javax.annotation.Priority;
 @Priority(20)
 @RestControllerAdvice
 public class DefaultControllerAdvice extends AbstractControllerAdvice {
-    @ExceptionHandler(value = { Exception.class, KnowllyException.class })
+    @ExceptionHandler(value = { Exception.class, EveryonepickException.class })
     public ResponseEntity<ApiResult<?>> handleUnknownException(Exception e) {
         return handleException(e, HttpStatus.INTERNAL_SERVER_ERROR);
     }

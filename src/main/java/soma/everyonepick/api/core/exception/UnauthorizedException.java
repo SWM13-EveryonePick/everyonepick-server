@@ -2,7 +2,7 @@ package soma.everyonepick.api.core.exception;
 /**
  * 인증되지 않은 접근 예외 (401 NotAuthorized)
  */
-public class UnauthorizedException extends KnowllyException {
+public class UnauthorizedException extends EveryonepickException {
     public UnauthorizedException() {
     }
 

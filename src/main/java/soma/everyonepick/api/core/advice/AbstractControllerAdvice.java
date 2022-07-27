@@ -1,9 +1,9 @@
 package soma.everyonepick.api.core.advice;
 
-import kr.co.knowledgerally.api.core.dto.ApiResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import soma.everyonepick.api.core.dto.ApiResult;
 
 /**
  * 추상 컨트롤러 어드바이스

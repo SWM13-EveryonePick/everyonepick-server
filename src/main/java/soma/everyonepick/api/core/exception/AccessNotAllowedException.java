@@ -3,7 +3,7 @@ package soma.everyonepick.api.core.exception;
 /**
  * 리소스 접근 권한 없음 예외 (403 Forbidden)
  */
-public class AccessNotAllowedException extends KnowllyException {
+public class AccessNotAllowedException extends EveryonepickException {
     public AccessNotAllowedException() {
     }
 
