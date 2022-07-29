@@ -34,11 +34,11 @@ public class User {
 
     @Column(nullable = false)
     @Builder.Default
-    private boolean isPushActive = true;
+    private Boolean isPushActive = true;
 
     @Column(nullable = false)
     @Builder.Default
-    private boolean isActive = true;
+    private Boolean isActive = true;
 
     @Builder.Default
     @CreationTimestamp

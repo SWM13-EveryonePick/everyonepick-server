@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import soma.everyonepick.api.user.dto.UserDto;
 import soma.everyonepick.api.user.entity.User;
-import soma.everyonepick.api.user.repository.UserRepository;
 import soma.everyonepick.api.user.service.UserService;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("")
-    public ResponseEntity<List<User>> getUser() {
+    public ResponseEntity<List<UserDto>> getUser() {
         return ResponseEntity.ok(userService.findAll());
     }
 }
