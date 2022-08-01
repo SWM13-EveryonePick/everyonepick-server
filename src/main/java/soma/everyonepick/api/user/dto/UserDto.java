@@ -24,7 +24,7 @@ public class UserDto {
 
     @ApiModelProperty(value = "카카오 회원번호", position = DisplayOrder.KAKAO_CLIENT_ID)
     @JsonProperty(index = DisplayOrder.KAKAO_CLIENT_ID)
-    private String kakaoClientId;
+    private String clientId;
 
     @ApiModelProperty(value = "카카오 썸네일 이미지", position = DisplayOrder.THUMBNAIL_IMAGE_URL)
     @JsonProperty(index = DisplayOrder.THUMBNAIL_IMAGE_URL)

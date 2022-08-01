@@ -21,7 +21,6 @@ import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_USER;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
 
     /**
      * 사용자를 저장합니다.
@@ -29,37 +28,30 @@ public class UserService {
      * @return 저장된 사용자 엔티티
      */
     @Transactional
-    public UserDto saveUser(@Valid User user) {
-        return userMapper.toDto(
-                userRepository.saveAndFlush(user)
-        );
+    public User saveUser(@Valid User user) {
+        return userRepository.saveAndFlush(user);
     }
 
     /**
      * 사용자 프로필을 식별자로 조회합니다.
      * @param clientId 조회하고자 하는 사용자 회원아이디
      * @return 사용자 엔티티
-     * @throws ResourceNotFoundException 존재하지 않는 회원아이디의 경우
+     * @throws null 존재하지 않는 회원아이디의 경우
      */
     @Transactional(readOnly = true)
-    public UserDto findByClientId(String clientId) {
-        return userMapper.toDto(
-                userRepository.findByClientIdAndIsActive(clientId, true)
-            .orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_USER))
-        );
+    public User findByClientId(String clientId) {
+        return userRepository.findByClientIdAndIsActive(clientId, true).orElse(null);
     }
 
     /**
      * 사용자 프로필을 조회합니다.
-     * @param userId 조회하고자 하는 사용자 Id
+     * @param id 조회하고자 하는 사용자 Id
      * @return 사용자 엔티티
      * @throws ResourceNotFoundException 존재하지 않는 사용자 Id의 경우
      */
     @Transactional(readOnly = true)
-    public UserDto findById(Long userId) {
-        return userMapper.toDto(
-                userRepository.findById(userId)
-                        .orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_USER))
-        );
+    public User findById(Long id) {
+        return userRepository.findByIdAndIsActive(id, true)
+                        .orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_USER));
     }
 }
