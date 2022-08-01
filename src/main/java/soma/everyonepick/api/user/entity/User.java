@@ -24,7 +24,7 @@ public class User {
     private String nickname;
 
     @Column(unique = true, nullable = false)
-    private String kakaoClientId;
+    private String clientId;
 
     @Column
     private String thumbnailImageUrl;
