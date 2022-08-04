@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
 import soma.everyonepick.api.core.message.ErrorMessage;
@@ -61,6 +62,20 @@ public class UserController {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         userMapper.toDto(userService.findById(userId)))
+        );
+    }
+
+    @Operation(description = "현재 로그인한 사용자 정보 가져오기")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
+    })
+    @GetMapping("/me")
+    public ResponseEntity<ApiResult<UserDto>> getUser(
+            @Parameter(hidden = true) @CurrentUser User loggedInUser
+    ) {
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        userMapper.toDto(loggedInUser))
         );
     }
 }
