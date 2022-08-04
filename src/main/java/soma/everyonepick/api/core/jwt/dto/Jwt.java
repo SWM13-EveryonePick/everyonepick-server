@@ -1,7 +1,7 @@
 package soma.everyonepick.api.core.jwt.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter
@@ -9,11 +9,11 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ApiModel(value = "Everyonepick Jwt Dto", description = "Everyonepick 제공 JWT Access Token, Refresh Token")
+@Schema(description = "Everyonepick Jwt Dto")
 public class Jwt {
-    @ApiModelProperty(value = "Everyonepick 제공 Access Token")
+    @Schema(description = "Everyonepick 제공 Access Token")
     private String everyonepickAccessToken;
 
-    @ApiModelProperty(value = "Everyonepick 제공 Refresh Token")
+    @Schema(description = "Everyonepick 제공 Refresh Token")
     private String everyonepickRefreshToken;
 }

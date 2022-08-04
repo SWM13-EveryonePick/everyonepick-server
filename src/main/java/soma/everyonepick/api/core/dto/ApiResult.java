@@ -1,8 +1,7 @@
 package soma.everyonepick.api.core.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import soma.everyonepick.api.core.message.ResponseMessage;
 
@@ -11,16 +10,16 @@ import soma.everyonepick.api.core.message.ResponseMessage;
  * @param <T> DTO 클래스 타입
  */
 @Getter
-@ApiModel(value="API 응답 공통 모델")
+@Schema(description="API 응답 공통 모델")
 public class ApiResult<T> {
 
-    @ApiModelProperty(value = "결과 메세지", position = 0)
+    @Schema(description = "결과 메세지")
     protected final String message;
 
-    @ApiModelProperty(value = "응답 데이터, 실패시 null", position = 1)
+    @Schema(description = "응답 데이터, 실패시 null")
     protected final T data;
 
-    @ApiModelProperty(value = "요청 서버 시간", position = 5)
+    @Schema(description = "요청 서버 시간")
     protected final long timestamp;
 
     public ApiResult(String message, T data) {

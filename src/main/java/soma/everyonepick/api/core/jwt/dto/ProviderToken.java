@@ -1,7 +1,7 @@
 package soma.everyonepick.api.core.jwt.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
 @Getter
@@ -9,12 +9,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-@ApiModel(value="Provider Token Dto", description="Provider 토큰 모델")
+@Schema(description="Provider Token Dto")
 public class ProviderToken {
-    @ApiModelProperty(value = "프로바이더 이름 (현재는 KAKAO만 가능)")
+    @Schema(description = "프로바이더 이름 (현재는 KAKAO만 가능)")
     private Provider providerName;
 
-    @ApiModelProperty(value = "Provider 제공 Access Token")
+    @Schema(description = "Provider 제공 Access Token")
     private String providerAccessToken;
 
     public void setProviderName(String providerName) {

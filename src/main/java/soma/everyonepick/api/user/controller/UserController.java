@@ -1,6 +1,11 @@
 package soma.everyonepick.api.user.controller;
 
-import io.swagger.annotations.*;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,13 +17,12 @@ import soma.everyonepick.api.user.dto.UserDto;
 import soma.everyonepick.api.user.entity.User;
 import soma.everyonepick.api.user.service.UserService;
 
-import java.util.List;
 
 /**
  * 사용자 정보 관련 Endpoint.
  */
 
-@Api(value = "사용자 정보 관련 Endpoint", tags = "사용자 정보")
+@Tag(description = "사용자 정보 관련 Endpoint", name = "사용자 정보")
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/user")
@@ -26,13 +30,13 @@ public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;
 
-    @ApiOperation(value = "회원아이디로 특정 사용자 정보 가져오기", notes = "회원아이디로 특정 사용자 정보를 가져옵니다.")
+    @Operation(description = "회원아이디로 특정 사용자 정보 가져오기")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
     })
     @GetMapping("")
     public ResponseEntity<ApiResult<UserDto>> getUserByClientId(
-            @ApiParam(value = "사용자 회원아이디", required = true)
+            @Parameter(description = "사용자 회원아이디", required = true)
             @RequestParam String clientId
     ) {
         User user = userService.findByClientId(clientId);
@@ -45,13 +49,13 @@ public class UserController {
         );
     }
 
-    @ApiOperation(value = "userId로 특정 사용자 정보 가져오기", notes = "userId로 특정 사용자 정보를 가져옵니다.")
+    @Operation(description = "userId로 특정 사용자 정보 가져오기")
     @ApiResponses({
-            @ApiResponse(code = 200, message = "조회 성공"),
+            @ApiResponse(responseCode = "200", description = "조회 성공"),
     })
     @GetMapping("/{userId}")
     public ResponseEntity<ApiResult<UserDto>> getUserById(
-            @ApiParam(value = "사용자 id", required = true)
+            @Parameter(description = "사용자 id", required = true)
             @PathVariable Long userId
     ) {
         return ResponseEntity.ok(
