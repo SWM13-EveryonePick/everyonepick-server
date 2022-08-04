@@ -53,7 +53,7 @@ public class JwtCreator {
 
     private String createToken(User user, long expirationMillisecond) {
         Claims claims = Jwts.claims().setSubject(user.getClientId()); // claim 임의로 설정
-        claims.put("nickname", user.getNickname());
+        //claims.put("nickname", user.getNickname());
         Date now = new Date();
         return Jwts.builder()
                 .setClaims(claims)
