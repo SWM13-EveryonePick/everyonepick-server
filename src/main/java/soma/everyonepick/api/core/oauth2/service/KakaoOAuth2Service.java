@@ -60,10 +60,10 @@ public class KakaoOAuth2Service implements OAuth2Service {
     }
 
     private OAuth2Profile buildKakaoProfile(JsonNode jsonNode) {
-        String clientId = jsonNode.get("id").asText();
+        Long clientId = jsonNode.get("id").asLong();
         String nickname = jsonNode.get("kakao_account").get("profile").get("nickname").asText();
-        String  thumbnailUrl = jsonNode.get("kakao_account").get("profile").get("thumbnail_image").asText();
+        String thumbnailUrl = jsonNode.get("kakao_account").get("profile").get("thumbnail_image_url").asText();
 
-        return new OAuth2Profile(KAKAO_IDENTIFIER_PREFIX + clientId, nickname, thumbnailUrl);
+        return new OAuth2Profile(KAKAO_IDENTIFIER_PREFIX + clientId.toString(), nickname, thumbnailUrl);
     }
 }

@@ -1,7 +1,7 @@
 package soma.everyonepick.api.core.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -13,13 +13,13 @@ import org.springframework.data.domain.Sort;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ApiModel(value="페이징 API 요청 모델")
+@Schema(description="페이징 API 요청 모델")
 @EqualsAndHashCode
 public class ApiPageRequest {
-    @ApiModelProperty(value = "요청 페이지 번호 (0부터 시작)", example = "0")
+    @Schema(description = "요청 페이지 번호 (0부터 시작)", example = "0")
     private int page = 0;
 
-    @ApiModelProperty(value = "요청 페이지 크기 (기본 : 10)", example = "10")
+    @Schema(description = "요청 페이지 크기 (기본 : 10)", example = "10")
     private int size = 10;
 
     public Pageable convert() {

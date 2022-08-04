@@ -5,3 +5,5 @@
 /build/
 /knowlly-batch/build/
 /knowlly-core/src/main/resources/application-dev.yml
+.DS_Store
+out

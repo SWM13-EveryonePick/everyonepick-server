@@ -3,6 +3,7 @@ package soma.everyonepick.api.user.entity;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.stereotype.Service;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,32 +14,19 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "refresh_token")
+public class RefreshToken {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column
-    private String nickname;
-
-    @Column(unique = true, nullable = false)
-    private String clientId;
-
-    @Column
-    private String thumbnailImageUrl;
-
-    @Column
-    private String fcmDeviceToken;
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(nullable = false)
-    @Builder.Default
-    private Boolean isPushActive = true;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean isActive = true;
+    private String value;
 
     @Builder.Default
     @CreationTimestamp

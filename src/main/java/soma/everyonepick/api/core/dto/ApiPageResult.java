@@ -1,8 +1,7 @@
 package soma.everyonepick.api.core.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import org.springframework.data.domain.Page;
 import soma.everyonepick.api.core.message.ResponseMessage;
@@ -14,19 +13,19 @@ import java.util.List;
  * @param <T> DTO 클래스 타입
  */
 @Getter
-@ApiModel(value="페이징 API 응답 모델")
+@Schema(description="페이징 API 응답 모델")
 public class ApiPageResult<T> extends ApiResult<List<T>> {
 
-    @ApiModelProperty(value = "페이지 번호", position = 2)
+    @Schema(description = "페이지 번호")
     private final int currentPage;
 
-    @ApiModelProperty(value = "총합 페이지", position = 3)
+    @Schema(description = "총합 페이지")
     private final int totalPage;
 
-    @ApiModelProperty(value = "페이지 크기", position = 4)
+    @Schema(description = "페이지 크기")
     private final int pageSize;
 
-    @ApiModelProperty(value = "전체 개수",  position = 5)
+    @Schema(description = "전체 개수")
     private final long totalElements;
 
     public ApiPageResult(Page<T> data, String message) {
