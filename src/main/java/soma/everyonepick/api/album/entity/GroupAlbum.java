@@ -1,4 +1,4 @@
-package soma.everyonepick.api.user.entity;
+package soma.everyonepick.api.album.entity;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,28 +13,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "album")
+public class GroupAlbum {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Column
-    private String nickname;
-
-    @Column(unique = true, nullable = false)
-    private String clientId;
-
-    @Column
-    private String thumbnailImageUrl;
-
-    @Column
-    private String fcmDeviceToken;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean isPushActive = true;
+    private String title;
 
     @Column(nullable = false)
     @Builder.Default
