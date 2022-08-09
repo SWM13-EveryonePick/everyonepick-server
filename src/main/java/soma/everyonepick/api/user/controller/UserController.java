@@ -71,7 +71,8 @@ public class UserController {
     })
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserDto>> getUser(
-            @Parameter(hidden = true) @CurrentUser User loggedInUser
+            @Parameter(hidden = true)
+            @CurrentUser User loggedInUser
     ) {
         return ResponseEntity.ok(
                 ApiResult.ok(

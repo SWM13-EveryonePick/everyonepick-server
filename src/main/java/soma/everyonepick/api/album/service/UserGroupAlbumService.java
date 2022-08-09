@@ -20,9 +20,9 @@ public class UserGroupAlbumService {
     private final UserService userService;
 
     /**
-     * 단체앨범에 속한 맴버들을 groupAlbum과 활성화 여부로 검색
+     * 단체앨범에 속한 맴버들을 groupAlbum로 조회
      * @param groupAlbum 단체앨범 엔티티
-     * @return 사용자 리스트
+     * @return List<User> 사용자 리스트
      */
     @Transactional
     public List<User> getMembers(GroupAlbum groupAlbum) {
@@ -34,5 +34,18 @@ public class UserGroupAlbumService {
         }
         users.set(0, hostUser);
         return users;
+    }
+
+    /**
+     * 현재 로그인한 사용자의 단체앨범 목록 조회
+     * @param user 현재 로그인한 사용자 엔티티
+     * @return List<GroupAlbum> 단체앨범 리스트
+     */
+    @Transactional
+    public List<GroupAlbum> getMyGroupAlbums(User user) {
+        List<UserGroupAlbum> userGroupAlbums = userGroupAlbumRepository.findAllByUserAndIsActiveOrderByCreatedAtDesc(user, true);
+        return userGroupAlbums.stream()
+                .map(UserGroupAlbum::getGroupAlbum)
+                .collect(Collectors.toList());
     }
 }
