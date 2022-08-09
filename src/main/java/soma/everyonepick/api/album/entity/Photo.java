@@ -13,18 +13,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "album")
-public class GroupAlbum {
+@Table(name = "photo")
+public class Photo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Column
-    private String title;
-
-    @Column
-    private Long hostUserId;
+    private String photoUrl;
 
     @Column(nullable = false)
     @Builder.Default
@@ -35,4 +32,8 @@ public class GroupAlbum {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @ManyToOne
+    @JoinColumn(name = "album_id")
+    private GroupAlbum groupAlbum;
 }

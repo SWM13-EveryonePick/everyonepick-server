@@ -5,14 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
-import soma.everyonepick.api.user.component.UserMapper;
-import soma.everyonepick.api.user.dto.UserDto;
 import soma.everyonepick.api.user.entity.User;
 import soma.everyonepick.api.user.repository.UserRepository;
 
 import javax.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_USER;
 

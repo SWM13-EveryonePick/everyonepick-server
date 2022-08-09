@@ -16,9 +16,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     /**
      * 사용자를 식별자와 활성화 여부로 검색
-     * @param id 사용자 id
+     * @param userId 사용자 id
      * @param isActive 활성화 여부
      * @return 사용자 Optional
      */
-    Optional<User> findByIdAndIsActive(Long id, boolean isActive);
+    Optional<User> findByIdAndIsActive(Long userId, boolean isActive);
 }
