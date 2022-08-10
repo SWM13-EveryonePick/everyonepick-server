@@ -13,4 +13,12 @@ public interface GroupAlbumRepository extends JpaRepository<GroupAlbum, Long> {
      * @return 단체앨범 Optional
      */
     Optional<GroupAlbum> findByIdAndIsActive(Long groupAlbumId, boolean isActive);
+
+    /**
+     * 단체앨범을 title과 활성화 여부로 검색
+     * @param title 단체앨범 제목
+     * @param isActive 활성화 여부
+     * @return 단체앨범 Optional
+     */
+    Optional<GroupAlbum> findByTitleAndIsActive(String title, boolean isActive);
 }
