@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.GroupAlbumMapper;
-import soma.everyonepick.api.album.dto.GroupAlbumCreateDto;
+import soma.everyonepick.api.album.dto.GroupAlbumDto;
 import soma.everyonepick.api.album.dto.GroupAlbumReadDetailDto;
 import soma.everyonepick.api.album.dto.GroupAlbumReadListDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
@@ -74,18 +74,40 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "등록 성공")
     })
     @PostMapping("")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> createGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> postGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
             @Parameter(description = "단체앨범 생성 모델", required = true)
-            @RequestBody @Valid GroupAlbumCreateDto groupAlbumCreateDto
+            @RequestBody @Valid GroupAlbumDto groupAlbumDto
             ) {
-        List<String> clientIds = groupAlbumCreateDto.getUsers().stream()
+        List<String> clientIds = groupAlbumDto.getUsers().stream()
                 .map(UserDto::getClientId)
                 .collect(Collectors.toList());
 
-        GroupAlbum groupAlbum = groupAlbumService.createGroupAlbum(groupAlbumCreateDto, user);
+        GroupAlbum groupAlbum = groupAlbumService.createGroupAlbum(groupAlbumDto, user);
         userGroupAlbumService.registerUsers(clientIds, groupAlbum);
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        groupAlbumMapper.toReadDetailDto(groupAlbum)
+                )
+        );
+    }
+
+    @Operation(description = "단체앨범 수정")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "수정 성공")
+    })
+    @PatchMapping("/{groupAlbumId}")
+    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> patchGroupAlbum(
+            @Parameter(hidden = true)
+            @CurrentUser User user,
+            @Parameter(description = "단체앨범 모델", required = true)
+            @RequestBody @Valid GroupAlbumDto groupAlbumDto,
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId
+
+    ) {
+        GroupAlbum groupAlbum = groupAlbumService.updateGroupAlbum(groupAlbumDto, user, groupAlbumId);
         return ResponseEntity.ok(
                 ApiResult.ok(
                         groupAlbumMapper.toReadDetailDto(groupAlbum)
