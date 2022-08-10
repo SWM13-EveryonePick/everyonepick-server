@@ -4,7 +4,6 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
-import soma.everyonepick.api.album.dto.GroupAlbumCreateDto;
 import soma.everyonepick.api.album.dto.GroupAlbumReadDetailDto;
 import soma.everyonepick.api.album.dto.GroupAlbumReadListDto;
 import soma.everyonepick.api.album.dto.PhotoDto;
@@ -13,7 +12,6 @@ import soma.everyonepick.api.album.service.PhotoService;
 import soma.everyonepick.api.album.service.UserGroupAlbumService;
 import soma.everyonepick.api.user.component.UserMapper;
 import soma.everyonepick.api.user.dto.UserDto;
-import soma.everyonepick.api.user.entity.User;
 
 import java.util.List;
 import java.util.stream.Collectors;

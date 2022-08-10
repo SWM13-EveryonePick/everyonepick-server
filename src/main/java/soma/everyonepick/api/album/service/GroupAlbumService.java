@@ -1,19 +1,18 @@
 package soma.everyonepick.api.album.service;
 
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import soma.everyonepick.api.album.dto.GroupAlbumCreateDto;
+import soma.everyonepick.api.album.dto.GroupAlbumDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.repository.GroupAlbumRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
+import soma.everyonepick.api.core.exception.UnauthorizedException;
 import soma.everyonepick.api.user.entity.User;
 
-import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_GROUP_ALBUM;
-import static soma.everyonepick.api.core.message.ErrorMessage.REDUNDANT_TITLE;
+import static soma.everyonepick.api.core.message.ErrorMessage.*;
 
 @Validated
 @Service
@@ -23,6 +22,7 @@ public class GroupAlbumService {
 
     /**
      * 단체앨범 id로 조회
+     *
      * @param groupAlbumId 조회하고자 하는 단체앨범 id
      * @return 단체앨범 엔티티
      */
@@ -34,6 +34,7 @@ public class GroupAlbumService {
 
     /**
      * 단체앨범 제목으로 조회
+     *
      * @param title 조회하고자 하는 단체앨범 제목
      * @return 단체앨범 엔티티
      */
@@ -45,19 +46,42 @@ public class GroupAlbumService {
 
     /**
      * 단체앨범 생성
-     * @param groupAlbumCreateDto 단체앨범 생성 Dto
-     * @param user 방장 사용자 엔티티
+     *
+     * @param groupAlbumDto 단체앨범 Dto
+     * @param user          방장 사용자 엔티티
      * @return 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum createGroupAlbum(GroupAlbumCreateDto groupAlbumCreateDto, User user) {
-        if (getGroupAlbumByTitle(groupAlbumCreateDto.getTitle()) != null) {
+    public GroupAlbum createGroupAlbum(GroupAlbumDto groupAlbumDto, User user) {
+        if (getGroupAlbumByTitle(groupAlbumDto.getTitle()) != null) {
             throw new BadRequestException(REDUNDANT_TITLE);
         }
         GroupAlbum groupAlbum = GroupAlbum.builder()
-                .title(groupAlbumCreateDto.getTitle())
+                .title(groupAlbumDto.getTitle())
                 .hostUserId(user.getId())
                 .build();
+        return groupAlbumRepository.saveAndFlush(groupAlbum);
+    }
+
+    /**
+     * 단체앨범 수정
+     * @param groupAlbumDto 단체앨범 Dto
+     * @param user 방장 사용자 엔티티
+     * @param groupAlbumId 단체앨범 id
+     * @return 단체앨범 엔티티
+     */
+    @Transactional
+    public GroupAlbum updateGroupAlbum(GroupAlbumDto groupAlbumDto, User user, Long groupAlbumId) {
+        GroupAlbum groupAlbum = getGroupAlbumById(groupAlbumId);
+        if (user.getId() != groupAlbum.getHostUserId()) {
+            throw new UnauthorizedException(NOT_HOST);
+        }
+
+        if (getGroupAlbumByTitle(groupAlbumDto.getTitle()) != null) {
+            throw new BadRequestException(REDUNDANT_TITLE);
+        }
+
+        groupAlbum.setTitle(groupAlbumDto.getTitle());
         return groupAlbumRepository.saveAndFlush(groupAlbum);
     }
 }
