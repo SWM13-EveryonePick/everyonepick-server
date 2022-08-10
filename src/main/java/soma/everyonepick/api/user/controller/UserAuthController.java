@@ -38,7 +38,8 @@ public class UserAuthController {
     })
     @PostMapping("/signup")
     public ResponseEntity<ApiResult<Jwt>> signup(
-            @Parameter(description = "프로바이더 액세스 토큰", required = true) @RequestBody @Valid ProviderToken providerToken) {
+            @Parameter(description = "프로바이더 액세스 토큰", required = true)
+            @RequestBody @Valid ProviderToken providerToken) {
         return ResponseEntity.ok(ApiResult.ok(
                 signUpService.signUp(providerToken)));
     }

@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
+import soma.everyonepick.api.album.dto.GroupAlbumCreateDto;
 import soma.everyonepick.api.album.dto.GroupAlbumReadDetailDto;
 import soma.everyonepick.api.album.dto.GroupAlbumReadListDto;
 import soma.everyonepick.api.album.dto.PhotoDto;

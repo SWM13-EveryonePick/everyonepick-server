@@ -72,11 +72,11 @@ public class UserController {
     @GetMapping("/me")
     public ResponseEntity<ApiResult<UserDto>> getUser(
             @Parameter(hidden = true)
-            @CurrentUser User loggedInUser
+            @CurrentUser User user
     ) {
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        userMapper.toDto(loggedInUser))
+                        userMapper.toDto(user))
         );
     }
 }
