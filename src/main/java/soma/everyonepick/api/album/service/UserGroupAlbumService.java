@@ -102,6 +102,31 @@ public class UserGroupAlbumService {
     }
 
     /**
+     * 멤버들을 단체앨범에서 강퇴
+     * @param clientIds 멤버들의 회원아이디 리스트
+     * @param groupAlbum 단체앨범 엔티티
+     * @return GroupAlbum 단체앨범 엔티티
+     */
+    @Transactional
+    public GroupAlbum banUsers(User user, List<String> clientIds, GroupAlbum groupAlbum) {
+        if (groupAlbum.getHostUserId() != user.getId()) {
+            throw new BadRequestException(NOT_HOST);
+        }
+
+        List<User> users = clientIds.stream()
+                .map(s -> userService.findByClientId(KAKAO_IDENTIFIER_PREFIX + s))
+                .collect(Collectors.toList());
+
+        List<UserGroupAlbum> userGroupAlbums = new ArrayList<>();
+
+        for (User member : users) {
+            userGroupAlbums.add(getUserGroupAlbum(member, groupAlbum));
+        }
+        userGroupAlbumRepository.deleteAll(userGroupAlbums);
+        return groupAlbum;
+    }
+
+    /**
      * 현재 단체앨범의 UserGroupAlbum 삭제
      * @param user 현재 로그인한 사용자 엔티티
      * @param groupAlbum 단체앨범 엔티티

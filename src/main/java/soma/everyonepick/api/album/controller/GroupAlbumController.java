@@ -165,4 +165,33 @@ public class GroupAlbumController {
                 )
         );
     }
+
+    @Operation(description = "단체앨범에 사용자 강퇴")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공")
+    })
+    @PatchMapping("/{groupAlbumId}/user")
+    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> banUserFromGroupAlbum(
+            @Parameter(hidden = true)
+            @CurrentUser User user,
+            @Parameter(description = "단체앨범 모델", required = true)
+            @RequestBody @Valid GroupAlbumDto groupAlbumDto,
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId
+
+    ) {
+        List<String> clientIds = groupAlbumDto.getUsers().stream()
+                .map(UserDto::getClientId)
+                .collect(Collectors.toList());
+
+        GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
+
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        groupAlbumMapper.toReadDetailDto(
+                                userGroupAlbumService.banUsers(user, clientIds, groupAlbum)
+                        )
+                )
+        );
+    }
 }
