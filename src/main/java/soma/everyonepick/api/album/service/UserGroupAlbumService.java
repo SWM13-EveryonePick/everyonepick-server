@@ -56,7 +56,7 @@ public class UserGroupAlbumService {
      * 현재 로그인한 사용자의 UserGroupAlbum 조회
      * @param user 현재 로그인한 사용자 엔티티
      * @param groupAlbum 단체앨범 엔티티
-     * @return UserGroupAlbum
+     * @return UserGroupAlbum 없으면 null
      */
     @Transactional(readOnly = true)
     public UserGroupAlbum getUserGroupAlbum(User user, GroupAlbum groupAlbum) {
@@ -71,21 +71,28 @@ public class UserGroupAlbumService {
      * @return GroupAlbum 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum registerUsers(List<String> clientIds, GroupAlbum groupAlbum) {
+    public GroupAlbum registerUsers(User user, List<String> clientIds, GroupAlbum groupAlbum) {
+        if (groupAlbum.getHostUserId() != user.getId()) {
+            throw new BadRequestException(NOT_HOST);
+        }
+
         List<User> users = clientIds.stream()
                 .map(s -> userService.findByClientId(KAKAO_IDENTIFIER_PREFIX + s))
                 .collect(Collectors.toList());
-        users.add(userService.findById(groupAlbum.getHostUserId()));
+
+        if (getUserGroupAlbum(user, groupAlbum) == null) {
+            users.add(user);
+        }
 
         List<UserGroupAlbum> userGroupAlbums = new ArrayList<>();
 
-        for (User user: users) {
-            if (getUserGroupAlbum(user, groupAlbum) != null) {
+        for (User member: users) {
+            if (getUserGroupAlbum(member, groupAlbum) != null) {
                 throw new BadRequestException(REDUNDANT_USER_GROUP_ALBUM);
             }
             userGroupAlbums.add(
                     UserGroupAlbum.builder()
-                            .user(user)
+                            .user(member)
                             .groupAlbum(groupAlbum)
                             .build()
             );
