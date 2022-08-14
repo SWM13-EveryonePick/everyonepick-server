@@ -114,4 +114,26 @@ public class GroupAlbumController {
                 )
         );
     }
+
+    @Operation(description = "단체앨범 나가기")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공")
+    })
+    @DeleteMapping("/{groupAlbumId}")
+    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> outGroupAlbum(
+            @Parameter(hidden = true)
+            @CurrentUser User user,
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId
+
+    ) {
+        GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        groupAlbumMapper.toReadDetailDto(
+                                userGroupAlbumService.deleteUserGroupAlbum(user, groupAlbum).getGroupAlbum()
+                        )
+                )
+        );
+    }
 }

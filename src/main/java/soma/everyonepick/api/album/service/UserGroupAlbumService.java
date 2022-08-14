@@ -14,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_HOST;
-import static soma.everyonepick.api.core.message.ErrorMessage.REDUNDANT_USER_GROUP_ALBUM;
+import static soma.everyonepick.api.core.message.ErrorMessage.*;
 
 @Service
 @RequiredArgsConstructor
@@ -93,5 +92,21 @@ public class UserGroupAlbumService {
         }
         userGroupAlbumRepository.saveAllAndFlush(userGroupAlbums);
         return groupAlbum;
+    }
+
+    /**
+     * 현재 단체앨범의 UserGroupAlbum 삭제
+     * @param user 현재 로그인한 사용자 엔티티
+     * @param groupAlbum 단체앨범 엔티티
+     * @return UserGroupAlbum
+     */
+    @Transactional
+    public UserGroupAlbum deleteUserGroupAlbum(User user, GroupAlbum groupAlbum) {
+        UserGroupAlbum userGroupAlbum = getUserGroupAlbum(user, groupAlbum);
+        if (groupAlbum.getHostUserId() == user.getId()) {
+            throw new BadRequestException(HOST_MUST_STAY);
+        }
+        userGroupAlbumRepository.delete(userGroupAlbum);
+        return userGroupAlbum;
     }
 }
