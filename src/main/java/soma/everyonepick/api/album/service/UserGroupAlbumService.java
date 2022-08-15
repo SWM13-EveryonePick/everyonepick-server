@@ -32,8 +32,9 @@ public class UserGroupAlbumService {
     public List<User> getMembers(GroupAlbum groupAlbum) {
         List<UserGroupAlbum> userGroupAlbums = userGroupAlbumRepository.findAllByGroupAlbumAndIsActive(groupAlbum, true);
         List<User> users = userGroupAlbums.stream().map(UserGroupAlbum::getUser).collect(Collectors.toList());
-        User hostUser = userService.findById(groupAlbum.getHostUserId());
-        if (!users.contains(hostUser)) {
+        List<Long> userIds = users.stream().map(User::getId).collect(Collectors.toList());
+
+        if (!userIds.contains(groupAlbum.getHostUserId())) {
             throw new BadRequestException(NOT_EXIST_HOST);
         }
         return users;
