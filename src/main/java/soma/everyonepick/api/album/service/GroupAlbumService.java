@@ -52,7 +52,7 @@ public class GroupAlbumService {
      * @return 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum createGroupAlbum(GroupAlbumDto groupAlbumDto, User user) {
+    public GroupAlbum createGroupAlbum(User user, GroupAlbumDto groupAlbumDto) {
         if (getGroupAlbumByTitle(groupAlbumDto.getTitle()) != null) {
             throw new BadRequestException(REDUNDANT_TITLE);
         }
@@ -71,7 +71,7 @@ public class GroupAlbumService {
      * @return 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum updateGroupAlbum(GroupAlbumDto groupAlbumDto, User user, Long groupAlbumId) {
+    public GroupAlbum updateGroupAlbum(User user, GroupAlbumDto groupAlbumDto, Long groupAlbumId) {
         GroupAlbum groupAlbum = getGroupAlbumById(groupAlbumId);
         if (user.getId() != groupAlbum.getHostUserId()) {
             throw new UnauthorizedException(NOT_HOST);
