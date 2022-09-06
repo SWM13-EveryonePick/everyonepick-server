@@ -65,6 +65,7 @@ public class GroupAlbumService {
 
     /**
      * 단체앨범 수정
+     *
      * @param groupAlbumDto 단체앨범 Dto
      * @param user 방장 사용자 엔티티
      * @param groupAlbumId 단체앨범 id

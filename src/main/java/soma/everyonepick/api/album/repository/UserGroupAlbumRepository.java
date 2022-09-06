@@ -15,7 +15,7 @@ public interface UserGroupAlbumRepository extends JpaRepository<UserGroupAlbum, 
      * @param isActive 활성화 여부
      * @return UserGroupAlbum 리스트
      */
-    List<UserGroupAlbum> findAllByGroupAlbumAndIsActive(GroupAlbum groupAlbum, boolean isActive);
+    List<UserGroupAlbum> findAllByGroupAlbumAndIsActiveOrderByCreatedAt(GroupAlbum groupAlbum, boolean isActive);
 
     /**
      * UserGroupAlbum 목록을 User와 활성화 여부로 검색

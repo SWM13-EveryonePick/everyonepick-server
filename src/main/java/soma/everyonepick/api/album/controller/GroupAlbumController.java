@@ -131,7 +131,7 @@ public class GroupAlbumController {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         groupAlbumMapper.toReadDetailDto(
-                                userGroupAlbumService.deleteUserGroupAlbum(user, groupAlbum).getGroupAlbum()
+                                userGroupAlbumService.outGroupAlbum(user, groupAlbum)
                         )
                 )
         );

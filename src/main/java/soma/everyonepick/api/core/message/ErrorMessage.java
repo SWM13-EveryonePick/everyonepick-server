@@ -11,5 +11,7 @@ public class ErrorMessage {
     public static String REDUNDANT_TITLE = "이미 존재하는 단체앨범 제목입니다.";
     public static String REDUNDANT_USER_GROUP_ALBUM = "이미 존재하는 멤버입니다.";
     public static String NOT_HOST = "방장 권한이 없습니다.";
-    public static String HOST_MUST_STAY = "방장은 단체앨범을 나갈 수 없습니다."; //:TODO 정책 결정되면 변경
+    @Deprecated
+    public static String HOST_MUST_STAY = "방장은 단체앨범을 나갈 수 없습니다.";
+    public static String NOT_MEMBER = "해당 방의 멤버가 아닙니다.";
 }

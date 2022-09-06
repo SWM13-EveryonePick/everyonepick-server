@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.UserGroupAlbum;
+import soma.everyonepick.api.album.repository.GroupAlbumRepository;
 import soma.everyonepick.api.album.repository.UserGroupAlbumRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.user.entity.User;
@@ -21,19 +22,20 @@ import static soma.everyonepick.api.core.message.ErrorMessage.*;
 public class UserGroupAlbumService {
     private static final String KAKAO_IDENTIFIER_PREFIX = "kakao_";
     private final UserGroupAlbumRepository userGroupAlbumRepository;
+    private final GroupAlbumRepository groupAlbumRepository;
     private final UserService userService;
 
     /**
      * 단체앨범에 속한 맴버들을 groupAlbum로 조회
-     * @param groupAlbum 단체앨범 엔티티
+     * @param groupAlbum 단체앨범 Entity
      * @return List<User> 사용자 리스트
      */
     @Transactional(readOnly = true)
     public List<User> getMembers(GroupAlbum groupAlbum) {
-        List<UserGroupAlbum> userGroupAlbums = userGroupAlbumRepository.findAllByGroupAlbumAndIsActive(groupAlbum, true);
+        List<UserGroupAlbum> userGroupAlbums = userGroupAlbumRepository.findAllByGroupAlbumAndIsActiveOrderByCreatedAt(groupAlbum, true);
         List<User> users = userGroupAlbums.stream().map(UserGroupAlbum::getUser).collect(Collectors.toList());
-        List<Long> userIds = users.stream().map(User::getId).collect(Collectors.toList());
 
+        List<Long> userIds = users.stream().map(User::getId).collect(Collectors.toList());
         if (!userIds.contains(groupAlbum.getHostUserId())) {
             throw new BadRequestException(NOT_EXIST_HOST);
         }
@@ -42,7 +44,7 @@ public class UserGroupAlbumService {
 
     /**
      * 현재 로그인한 사용자의 단체앨범 목록 조회
-     * @param user 현재 로그인한 사용자 엔티티
+     * @param user 현재 로그인한 사용자 Entity
      * @return List<GroupAlbum> 단체앨범 리스트
      */
     @Transactional(readOnly = true)
@@ -55,8 +57,8 @@ public class UserGroupAlbumService {
 
     /**
      * 현재 로그인한 사용자의 UserGroupAlbum 조회
-     * @param user 현재 로그인한 사용자 엔티티
-     * @param groupAlbum 단체앨범 엔티티
+     * @param user 현재 로그인한 사용자 Entity
+     * @param groupAlbum 단체앨범 Entity
      * @return UserGroupAlbum 없으면 null
      */
     @Transactional(readOnly = true)
@@ -68,8 +70,8 @@ public class UserGroupAlbumService {
     /**
      * 멤버들을 단체앨범에 등록
      * @param clientIds 멤버들의 회원아이디 리스트
-     * @param groupAlbum 단체앨범 엔티티
-     * @return GroupAlbum 단체앨범 엔티티
+     * @param groupAlbum 단체앨범 Entity
+     * @return GroupAlbum 단체앨범 Entity
      */
     @Transactional
     public GroupAlbum registerUsers(User user, List<String> clientIds, GroupAlbum groupAlbum) {
@@ -105,8 +107,8 @@ public class UserGroupAlbumService {
     /**
      * 멤버들을 단체앨범에서 강퇴
      * @param clientIds 멤버들의 회원아이디 리스트
-     * @param groupAlbum 단체앨범 엔티티
-     * @return GroupAlbum 단체앨범 엔티티
+     * @param groupAlbum 단체앨범 Entity
+     * @return GroupAlbum 단체앨범 Entity
      */
     @Transactional
     public GroupAlbum banUsers(User user, List<String> clientIds, GroupAlbum groupAlbum) {
@@ -128,18 +130,54 @@ public class UserGroupAlbumService {
     }
 
     /**
-     * 현재 단체앨범의 UserGroupAlbum 삭제
-     * @param user 현재 로그인한 사용자 엔티티
-     * @param groupAlbum 단체앨범 엔티티
-     * @return UserGroupAlbum
+     * 현재 단체앨범에서 나가기
+     * @param user 현재 로그인한 사용자 Entity
+     * @param groupAlbum 단체앨범 Entity
+     * @return GroupAlbum
      */
     @Transactional
-    public UserGroupAlbum deleteUserGroupAlbum(User user, GroupAlbum groupAlbum) {
+    public GroupAlbum outGroupAlbum(User user, GroupAlbum groupAlbum) {
         UserGroupAlbum userGroupAlbum = getUserGroupAlbum(user, groupAlbum);
+
+        if (userGroupAlbum == null) {
+            throw new BadRequestException(NOT_MEMBER);
+        }
+
         if (groupAlbum.getHostUserId() == user.getId()) {
-            throw new BadRequestException(HOST_MUST_STAY);
+            List<User> users = getMembers(groupAlbum);
+
+            if (users.size() == 1) {
+                groupAlbum = deleteGroupAlbum(groupAlbum);
+            }
+            else {
+                users.remove(user);
+                groupAlbum = delegateHost(users, groupAlbum);
+            }
         }
         userGroupAlbumRepository.delete(userGroupAlbum);
-        return userGroupAlbum;
+        return groupAlbum;
+    }
+
+    /**
+     * 현재 단체앨범 방장 위임하기
+     * @param users 단체앨범 멤버 리스트
+     * @param groupAlbum 단체앨범 Entity
+     * @retun User 새로운 방장 Entity
+     */
+    @Transactional(readOnly = true)
+    public GroupAlbum delegateHost(List<User> users, GroupAlbum groupAlbum) {
+        groupAlbum.setHostUserId(users.get(0).getId());
+        return groupAlbumRepository.saveAndFlush(groupAlbum);
+    }
+
+    /**
+     * 현재 단체앨범 삭제하기
+     * @param
+     * @return
+     */
+    @Transactional
+    public GroupAlbum deleteGroupAlbum(GroupAlbum groupAlbum) {
+        //:TODO 방장만 남아있을 시 모든 데이터 비활성화 후 단체앨범 비활성화
+        return groupAlbum;
     }
 }
