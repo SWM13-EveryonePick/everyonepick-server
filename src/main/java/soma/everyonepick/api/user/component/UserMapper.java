@@ -2,7 +2,7 @@ package soma.everyonepick.api.user.component;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
-import soma.everyonepick.api.user.dto.UserDto;
+import soma.everyonepick.api.user.dto.UserResponseDto;
 import soma.everyonepick.api.user.entity.User;
 
 @Mapper(
@@ -10,6 +10,6 @@ import soma.everyonepick.api.user.entity.User;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface UserMapper {
-    UserDto toDto(User user);
-    User toEntity(UserDto userDto);
+    UserResponseDto toDto(User user);
+    User toEntity(UserResponseDto userResponseDto);
 }

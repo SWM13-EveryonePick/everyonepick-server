@@ -2,51 +2,50 @@ package soma.everyonepick.api.album.component;
 
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
-import soma.everyonepick.api.album.dto.GroupAlbumReadDetailDto;
-import soma.everyonepick.api.album.dto.GroupAlbumReadListDto;
+import soma.everyonepick.api.album.dto.GroupAlbumListResponseDto;
+import soma.everyonepick.api.album.dto.GroupAlbumResponseDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-06T16:50:59+0900",
+    date = "2022-09-07T00:34:23+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component
 public class GroupAlbumMapperImpl extends GroupAlbumMapper {
 
     @Override
-    public GroupAlbumReadDetailDto toReadDetailDto(GroupAlbum groupAlbum) {
+    public GroupAlbumResponseDto toResponseDto(GroupAlbum groupAlbum) {
         if ( groupAlbum == null ) {
             return null;
         }
 
-        GroupAlbumReadDetailDto.GroupAlbumReadDetailDtoBuilder groupAlbumReadDetailDto = GroupAlbumReadDetailDto.builder();
+        GroupAlbumResponseDto.GroupAlbumResponseDtoBuilder groupAlbumResponseDto = GroupAlbumResponseDto.builder();
 
-        groupAlbumReadDetailDto.id( groupAlbum.getId() );
-        groupAlbumReadDetailDto.title( groupAlbum.getTitle() );
-        groupAlbumReadDetailDto.hostUserId( groupAlbum.getHostUserId() );
+        groupAlbumResponseDto.id( groupAlbum.getId() );
+        groupAlbumResponseDto.title( groupAlbum.getTitle() );
+        groupAlbumResponseDto.hostUserId( groupAlbum.getHostUserId() );
 
-        groupAlbumReadDetailDto.users( getMemberDtos(groupAlbum) );
-        groupAlbumReadDetailDto.photos( getPhotoDtos(groupAlbum) );
+        groupAlbumResponseDto.users( getMemberDtos(groupAlbum) );
 
-        return groupAlbumReadDetailDto.build();
+        return groupAlbumResponseDto.build();
     }
 
     @Override
-    public GroupAlbumReadListDto toReadListDto(GroupAlbum groupAlbum) {
+    public GroupAlbumListResponseDto toListResponseDto(GroupAlbum groupAlbum) {
         if ( groupAlbum == null ) {
             return null;
         }
 
-        GroupAlbumReadListDto.GroupAlbumReadListDtoBuilder groupAlbumReadListDto = GroupAlbumReadListDto.builder();
+        GroupAlbumListResponseDto.GroupAlbumListResponseDtoBuilder groupAlbumListResponseDto = GroupAlbumListResponseDto.builder();
 
-        groupAlbumReadListDto.id( groupAlbum.getId() );
-        groupAlbumReadListDto.title( groupAlbum.getTitle() );
-        groupAlbumReadListDto.hostUserId( groupAlbum.getHostUserId() );
+        groupAlbumListResponseDto.id( groupAlbum.getId() );
+        groupAlbumListResponseDto.title( groupAlbum.getTitle() );
+        groupAlbumListResponseDto.hostUserId( groupAlbum.getHostUserId() );
 
-        groupAlbumReadListDto.users( getMemberDtos(groupAlbum) );
-        groupAlbumReadListDto.photoCnt( getPhotoCnt(groupAlbum) );
+        groupAlbumListResponseDto.users( getMemberDtos(groupAlbum) );
+        groupAlbumListResponseDto.photoCnt( getPhotoCnt(groupAlbum) );
 
-        return groupAlbumReadListDto.build();
+        return groupAlbumListResponseDto.build();
     }
 }

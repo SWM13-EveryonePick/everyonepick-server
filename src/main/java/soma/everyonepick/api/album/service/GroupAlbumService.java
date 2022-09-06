@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
-import soma.everyonepick.api.album.dto.GroupAlbumDto;
+import soma.everyonepick.api.album.dto.GroupAlbumRequestDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.repository.GroupAlbumRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
@@ -47,17 +47,17 @@ public class GroupAlbumService {
     /**
      * 단체앨범 생성
      *
-     * @param groupAlbumDto 단체앨범 Dto
+     * @param groupAlbumRequestDto 단체앨범 Dto
      * @param user          방장 사용자 엔티티
      * @return 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum createGroupAlbum(User user, GroupAlbumDto groupAlbumDto) {
-        if (getGroupAlbumByTitle(groupAlbumDto.getTitle()) != null) {
+    public GroupAlbum createGroupAlbum(User user, GroupAlbumRequestDto groupAlbumRequestDto) {
+        if (getGroupAlbumByTitle(groupAlbumRequestDto.getTitle()) != null) {
             throw new BadRequestException(REDUNDANT_TITLE);
         }
         GroupAlbum groupAlbum = GroupAlbum.builder()
-                .title(groupAlbumDto.getTitle())
+                .title(groupAlbumRequestDto.getTitle())
                 .hostUserId(user.getId())
                 .build();
         return groupAlbumRepository.saveAndFlush(groupAlbum);
@@ -66,23 +66,23 @@ public class GroupAlbumService {
     /**
      * 단체앨범 수정
      *
-     * @param groupAlbumDto 단체앨범 Dto
+     * @param groupAlbumRequestDto 단체앨범 Dto
      * @param user 방장 사용자 엔티티
      * @param groupAlbumId 단체앨범 id
      * @return 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum updateGroupAlbum(User user, GroupAlbumDto groupAlbumDto, Long groupAlbumId) {
+    public GroupAlbum updateGroupAlbum(User user, GroupAlbumRequestDto groupAlbumRequestDto, Long groupAlbumId) {
         GroupAlbum groupAlbum = getGroupAlbumById(groupAlbumId);
         if (user.getId() != groupAlbum.getHostUserId()) {
             throw new UnauthorizedException(NOT_HOST);
         }
 
-        if (getGroupAlbumByTitle(groupAlbumDto.getTitle()) != null) {
+        if (getGroupAlbumByTitle(groupAlbumRequestDto.getTitle()) != null) {
             throw new BadRequestException(REDUNDANT_TITLE);
         }
 
-        groupAlbum.setTitle(groupAlbumDto.getTitle());
+        groupAlbum.setTitle(groupAlbumRequestDto.getTitle());
         return groupAlbumRepository.saveAndFlush(groupAlbum);
     }
 }

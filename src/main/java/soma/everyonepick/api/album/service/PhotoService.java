@@ -18,7 +18,7 @@ public class PhotoService {
      * @param groupAlbum 단체앨범 엔티티
      * @return List<Photo>
      */
-    public List<Photo> getPhotos(GroupAlbum groupAlbum) {
+    public List<Photo> getPhotosByGroupAlbum(GroupAlbum groupAlbum) {
         return photoRepository.findAllByGroupAlbumAndIsActive(groupAlbum, true);
     }
 }
