@@ -10,8 +10,8 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "사용자 모델")
-public class UserDto {
+@Schema(description = "사용자 응답모델")
+public class UserResponseDto {
 
     @Schema(description = "id")
     @JsonProperty(index = 0)

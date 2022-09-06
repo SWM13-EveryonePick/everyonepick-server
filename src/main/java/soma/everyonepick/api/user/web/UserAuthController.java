@@ -1,4 +1,4 @@
-package soma.everyonepick.api.user.controller;
+package soma.everyonepick.api.user.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -19,7 +19,6 @@ import soma.everyonepick.api.core.jwt.service.JwtService;
 import soma.everyonepick.api.user.service.UserSignUpService;
 
 import javax.validation.Valid;
-import java.util.Map;
 
 /**
  * 사용자 인증 관련 엔드포인트

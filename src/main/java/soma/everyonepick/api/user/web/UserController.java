@@ -1,4 +1,4 @@
-package soma.everyonepick.api.user.controller;
+package soma.everyonepick.api.user.web;
 
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,7 @@ import soma.everyonepick.api.core.dto.ApiResult;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
 import soma.everyonepick.api.core.message.ErrorMessage;
 import soma.everyonepick.api.user.component.UserMapper;
-import soma.everyonepick.api.user.dto.UserDto;
+import soma.everyonepick.api.user.dto.UserResponseDto;
 import soma.everyonepick.api.user.entity.User;
 import soma.everyonepick.api.user.service.UserService;
 
@@ -36,7 +36,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
     })
     @GetMapping("")
-    public ResponseEntity<ApiResult<UserDto>> getUserByClientId(
+    public ResponseEntity<ApiResult<UserResponseDto>> getUserByClientId(
             @Parameter(description = "사용자 회원아이디", required = true)
             @RequestParam String clientId
     ) {
@@ -55,7 +55,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
     })
     @GetMapping("/{userId}")
-    public ResponseEntity<ApiResult<UserDto>> getUserById(
+    public ResponseEntity<ApiResult<UserResponseDto>> getUserById(
             @Parameter(description = "사용자 id", required = true)
             @PathVariable Long userId
     ) {
@@ -70,7 +70,7 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "조회 성공"),
     })
     @GetMapping("/me")
-    public ResponseEntity<ApiResult<UserDto>> getUser(
+    public ResponseEntity<ApiResult<UserResponseDto>> getUser(
             @Parameter(hidden = true)
             @CurrentUser User user
     ) {

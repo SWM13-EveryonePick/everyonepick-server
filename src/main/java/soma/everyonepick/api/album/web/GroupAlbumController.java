@@ -1,4 +1,4 @@
-package soma.everyonepick.api.album.controller;
+package soma.everyonepick.api.album.web;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -9,16 +9,19 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.GroupAlbumMapper;
-import soma.everyonepick.api.album.dto.GroupAlbumDto;
-import soma.everyonepick.api.album.dto.GroupAlbumReadDetailDto;
-import soma.everyonepick.api.album.dto.GroupAlbumReadListDto;
+import soma.everyonepick.api.album.component.PhotoMapper;
+import soma.everyonepick.api.album.dto.*;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.service.GroupAlbumService;
+import soma.everyonepick.api.album.service.PhotoService;
 import soma.everyonepick.api.album.service.UserGroupAlbumService;
 import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
-import soma.everyonepick.api.user.dto.UserDto;
+import soma.everyonepick.api.user.component.UserMapper;
+import soma.everyonepick.api.user.dto.UserRequestDto;
+import soma.everyonepick.api.user.dto.UserResponseDto;
 import soma.everyonepick.api.user.entity.User;
+import soma.everyonepick.api.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -35,20 +38,23 @@ public class GroupAlbumController {
     private final GroupAlbumService groupAlbumService;
     private final GroupAlbumMapper groupAlbumMapper;
     private final UserGroupAlbumService userGroupAlbumService;
+    private final PhotoService photoService;
+    private final PhotoMapper photoMapper;
+    private final UserMapper userMapper;
 
     @Operation(description = "단체앨범 목록 조회")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping("")
-    public ResponseEntity<ApiResult<List<GroupAlbumReadListDto>>> getGroupAlbums(
+    public ResponseEntity<ApiResult<List<GroupAlbumListResponseDto>>> getGroupAlbums(
             @Parameter(hidden = true)
             @CurrentUser User user
     ) {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         userGroupAlbumService.getMyGroupAlbums(user).stream()
-                                .map(s -> groupAlbumMapper.toReadListDto(s))
+                                .map(groupAlbumMapper::toListResponseDto)
                                 .collect(Collectors.toList())
                 ));
     }
@@ -58,13 +64,13 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping("/{groupAlbumId}")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> getGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumResponseDto>> getGroupAlbum(
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
     ) {
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        groupAlbumMapper.toReadDetailDto(
+                        groupAlbumMapper.toResponseDto(
                                 groupAlbumService.getGroupAlbumById(groupAlbumId))
         ));
     }
@@ -74,21 +80,22 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "등록 성공")
     })
     @PostMapping("")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> postGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumResponseDto>> postGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 생성 모델", required = true)
-            @RequestBody @Valid GroupAlbumDto groupAlbumDto
+            @Parameter(description = "단체앨범 요청 모델", required = true)
+            @RequestBody @Valid GroupAlbumRequestDto groupAlbumRequestDto
             ) {
-        List<String> clientIds = groupAlbumDto.getUsers().stream()
-                .map(UserDto::getClientId)
+        List<User> users = groupAlbumRequestDto.getUsers().stream()
+                .map(userMapper::toEntity)
                 .collect(Collectors.toList());
 
-        GroupAlbum groupAlbum = groupAlbumService.createGroupAlbum(user, groupAlbumDto);
-        userGroupAlbumService.registerUsers(user, clientIds, groupAlbum);
+        GroupAlbum groupAlbum = groupAlbumService.createGroupAlbum(user, groupAlbumRequestDto);
+        userGroupAlbumService.registerUsers(user, users, groupAlbum);
+
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        groupAlbumMapper.toReadDetailDto(groupAlbum)
+                        groupAlbumMapper.toResponseDto(groupAlbum)
                 )
         );
     }
@@ -98,19 +105,19 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "수정 성공")
     })
     @PatchMapping("/{groupAlbumId}")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> patchGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumResponseDto>> patchGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 모델", required = true)
-            @RequestBody @Valid GroupAlbumDto groupAlbumDto,
+            @Parameter(description = "단체앨범 수정모델", required = true)
+            @RequestBody @Valid GroupAlbumUpdateDto groupAlbumUpdateDto,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
 
     ) {
-        GroupAlbum groupAlbum = groupAlbumService.updateGroupAlbum(user, groupAlbumDto, groupAlbumId);
+        GroupAlbum groupAlbum = groupAlbumService.updateGroupAlbum(user, groupAlbumUpdateDto, groupAlbumId);
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        groupAlbumMapper.toReadDetailDto(groupAlbum)
+                        groupAlbumMapper.toResponseDto(groupAlbum)
                 )
         );
     }
@@ -120,7 +127,7 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "성공")
     })
     @DeleteMapping("/{groupAlbumId}")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> outGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumResponseDto>> outGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
             @Parameter(description = "단체앨범 id", required = true)
@@ -130,8 +137,8 @@ public class GroupAlbumController {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        groupAlbumMapper.toReadDetailDto(
-                                userGroupAlbumService.deleteUserGroupAlbum(user, groupAlbum).getGroupAlbum()
+                        groupAlbumMapper.toResponseDto(
+                                userGroupAlbumService.outGroupAlbum(user, groupAlbum)
                         )
                 )
         );
@@ -142,25 +149,25 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "성공")
     })
     @PostMapping("/{groupAlbumId}/user")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> inviteUserToGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumResponseDto>> inviteUserToGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 모델", required = true)
-            @RequestBody @Valid GroupAlbumDto groupAlbumDto,
+            @Parameter(description = "단체앨범 사용자 모델", required = true)
+            @RequestBody @Valid GroupAlbumUserDto groupAlbumUserDto,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
 
     ) {
-        List<String> clientIds = groupAlbumDto.getUsers().stream()
-                .map(UserDto::getClientId)
+        List<User> users = groupAlbumUserDto.getUsers().stream()
+                .map(userMapper::toEntity)
                 .collect(Collectors.toList());
 
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
 
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        groupAlbumMapper.toReadDetailDto(
-                                userGroupAlbumService.registerUsers(user, clientIds, groupAlbum)
+                        groupAlbumMapper.toResponseDto(
+                                userGroupAlbumService.registerUsers(user, users, groupAlbum)
                         )
                 )
         );
@@ -171,27 +178,48 @@ public class GroupAlbumController {
             @ApiResponse(responseCode = "200", description = "성공")
     })
     @PatchMapping("/{groupAlbumId}/user")
-    public ResponseEntity<ApiResult<GroupAlbumReadDetailDto>> banUserFromGroupAlbum(
+    public ResponseEntity<ApiResult<GroupAlbumResponseDto>> banUserFromGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 모델", required = true)
-            @RequestBody @Valid GroupAlbumDto groupAlbumDto,
+            @Parameter(description = "단체앨범 사용자 모델", required = true)
+            @RequestBody @Valid GroupAlbumUserDto groupAlbumUserDto,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
 
     ) {
-        List<String> clientIds = groupAlbumDto.getUsers().stream()
-                .map(UserDto::getClientId)
+        List<User> users = groupAlbumUserDto.getUsers().stream()
+                .map(userMapper::toEntity)
                 .collect(Collectors.toList());
 
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
 
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        groupAlbumMapper.toReadDetailDto(
-                                userGroupAlbumService.banUsers(user, clientIds, groupAlbum)
+                        groupAlbumMapper.toResponseDto(
+                                userGroupAlbumService.banUsers(user, users, groupAlbum)
                         )
                 )
         );
+    }
+
+    @Operation(description = "단체앨범 사진조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "성공")
+    })
+    @GetMapping("/{groupAlbumId}/photo")
+    public ResponseEntity<ApiResult<List<PhotoDto>>> getPhotos(
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId
+
+    ) {
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        photoService.getPhotosByGroupAlbum(
+                                groupAlbumService.getGroupAlbumById(groupAlbumId)
+                        ).stream()
+                                .map(photoMapper::toDto)
+                                .collect(Collectors.toList())
+                        )
+                );
     }
 }
