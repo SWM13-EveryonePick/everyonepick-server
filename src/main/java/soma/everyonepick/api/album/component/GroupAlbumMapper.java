@@ -6,11 +6,15 @@ import org.mapstruct.ReportingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import soma.everyonepick.api.album.dto.GroupAlbumListResponseDto;
 import soma.everyonepick.api.album.dto.GroupAlbumResponseDto;
+import soma.everyonepick.api.album.dto.GroupAlbumUserDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.service.PhotoService;
 import soma.everyonepick.api.album.service.UserGroupAlbumService;
 import soma.everyonepick.api.user.component.UserMapper;
+import soma.everyonepick.api.user.dto.UserRequestDto;
 import soma.everyonepick.api.user.dto.UserResponseDto;
+import soma.everyonepick.api.user.entity.User;
+import soma.everyonepick.api.user.service.UserService;
 
 import java.util.List;
 import java.util.stream.Collectors;

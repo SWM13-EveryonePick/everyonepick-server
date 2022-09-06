@@ -9,7 +9,6 @@ import soma.everyonepick.api.album.repository.GroupAlbumRepository;
 import soma.everyonepick.api.album.repository.UserGroupAlbumRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.user.entity.User;
-import soma.everyonepick.api.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,10 +19,8 @@ import static soma.everyonepick.api.core.message.ErrorMessage.*;
 @Service
 @RequiredArgsConstructor
 public class UserGroupAlbumService {
-    private static final String KAKAO_IDENTIFIER_PREFIX = "kakao_";
     private final UserGroupAlbumRepository userGroupAlbumRepository;
     private final GroupAlbumRepository groupAlbumRepository;
-    private final UserService userService;
 
     /**
      * 단체앨범에 속한 맴버들을 groupAlbum로 조회
@@ -69,19 +66,15 @@ public class UserGroupAlbumService {
 
     /**
      * 멤버들을 단체앨범에 등록
-     * @param clientIds 멤버들의 회원아이디 리스트
+     * @param users 멤버 리스트
      * @param groupAlbum 단체앨범 Entity
      * @return GroupAlbum 단체앨범 Entity
      */
     @Transactional
-    public GroupAlbum registerUsers(User user, List<String> clientIds, GroupAlbum groupAlbum) {
+    public GroupAlbum registerUsers(User user, List<User> users, GroupAlbum groupAlbum) {
         if (groupAlbum.getHostUserId() != user.getId()) {
             throw new BadRequestException(NOT_HOST);
         }
-
-        List<User> users = clientIds.stream()
-                .map(s -> userService.findByClientId(KAKAO_IDENTIFIER_PREFIX + s))
-                .collect(Collectors.toList());
 
         if (getUserGroupAlbum(user, groupAlbum) == null) {
             users.add(user);
@@ -106,19 +99,15 @@ public class UserGroupAlbumService {
 
     /**
      * 멤버들을 단체앨범에서 강퇴
-     * @param clientIds 멤버들의 회원아이디 리스트
+     * @param users 멤버 리스트
      * @param groupAlbum 단체앨범 Entity
      * @return GroupAlbum 단체앨범 Entity
      */
     @Transactional
-    public GroupAlbum banUsers(User user, List<String> clientIds, GroupAlbum groupAlbum) {
+    public GroupAlbum banUsers(User user, List<User> users, GroupAlbum groupAlbum) {
         if (groupAlbum.getHostUserId() != user.getId()) {
             throw new BadRequestException(NOT_HOST);
         }
-
-        List<User> users = clientIds.stream()
-                .map(s -> userService.findByClientId(KAKAO_IDENTIFIER_PREFIX + s))
-                .collect(Collectors.toList());
 
         List<UserGroupAlbum> userGroupAlbums = new ArrayList<>();
 
@@ -147,7 +136,8 @@ public class UserGroupAlbumService {
             List<User> users = getMembers(groupAlbum);
 
             if (users.size() == 1) {
-                groupAlbum = deleteGroupAlbum(groupAlbum);
+                throw new BadRequestException(HOST_MUST_STAY);
+                //groupAlbum = deleteGroupAlbum(groupAlbum);
             }
             else {
                 users.remove(user);

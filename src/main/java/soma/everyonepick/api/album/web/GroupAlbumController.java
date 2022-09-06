@@ -10,19 +10,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.GroupAlbumMapper;
 import soma.everyonepick.api.album.component.PhotoMapper;
-import soma.everyonepick.api.album.dto.GroupAlbumRequestDto;
-import soma.everyonepick.api.album.dto.GroupAlbumListResponseDto;
-import soma.everyonepick.api.album.dto.GroupAlbumResponseDto;
-import soma.everyonepick.api.album.dto.PhotoDto;
+import soma.everyonepick.api.album.dto.*;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.service.GroupAlbumService;
 import soma.everyonepick.api.album.service.PhotoService;
 import soma.everyonepick.api.album.service.UserGroupAlbumService;
 import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
+import soma.everyonepick.api.user.component.UserMapper;
 import soma.everyonepick.api.user.dto.UserRequestDto;
 import soma.everyonepick.api.user.dto.UserResponseDto;
 import soma.everyonepick.api.user.entity.User;
+import soma.everyonepick.api.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -41,6 +40,7 @@ public class GroupAlbumController {
     private final UserGroupAlbumService userGroupAlbumService;
     private final PhotoService photoService;
     private final PhotoMapper photoMapper;
+    private final UserMapper userMapper;
 
     @Operation(description = "단체앨범 목록 조회")
     @ApiResponses({
@@ -83,15 +83,16 @@ public class GroupAlbumController {
     public ResponseEntity<ApiResult<GroupAlbumResponseDto>> postGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 생성 모델", required = true)
+            @Parameter(description = "단체앨범 요청 모델", required = true)
             @RequestBody @Valid GroupAlbumRequestDto groupAlbumRequestDto
             ) {
-        List<String> clientIds = groupAlbumRequestDto.getUsers().stream()
-                .map(UserRequestDto::getClientId)
+        List<User> users = groupAlbumRequestDto.getUsers().stream()
+                .map(userMapper::toEntity)
                 .collect(Collectors.toList());
 
         GroupAlbum groupAlbum = groupAlbumService.createGroupAlbum(user, groupAlbumRequestDto);
-        userGroupAlbumService.registerUsers(user, clientIds, groupAlbum);
+        userGroupAlbumService.registerUsers(user, users, groupAlbum);
+
         return ResponseEntity.ok(
                 ApiResult.ok(
                         groupAlbumMapper.toResponseDto(groupAlbum)
@@ -107,13 +108,13 @@ public class GroupAlbumController {
     public ResponseEntity<ApiResult<GroupAlbumResponseDto>> patchGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 모델", required = true)
-            @RequestBody @Valid GroupAlbumRequestDto groupAlbumRequestDto,
+            @Parameter(description = "단체앨범 수정모델", required = true)
+            @RequestBody @Valid GroupAlbumUpdateDto groupAlbumUpdateDto,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
 
     ) {
-        GroupAlbum groupAlbum = groupAlbumService.updateGroupAlbum(user, groupAlbumRequestDto, groupAlbumId);
+        GroupAlbum groupAlbum = groupAlbumService.updateGroupAlbum(user, groupAlbumUpdateDto, groupAlbumId);
         return ResponseEntity.ok(
                 ApiResult.ok(
                         groupAlbumMapper.toResponseDto(groupAlbum)
@@ -151,14 +152,14 @@ public class GroupAlbumController {
     public ResponseEntity<ApiResult<GroupAlbumResponseDto>> inviteUserToGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 모델", required = true)
-            @RequestBody @Valid GroupAlbumRequestDto groupAlbumRequestDto,
+            @Parameter(description = "단체앨범 사용자 모델", required = true)
+            @RequestBody @Valid GroupAlbumUserDto groupAlbumUserDto,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
 
     ) {
-        List<String> clientIds = groupAlbumRequestDto.getUsers().stream()
-                .map(UserRequestDto::getClientId)
+        List<User> users = groupAlbumUserDto.getUsers().stream()
+                .map(userMapper::toEntity)
                 .collect(Collectors.toList());
 
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
@@ -166,7 +167,7 @@ public class GroupAlbumController {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         groupAlbumMapper.toResponseDto(
-                                userGroupAlbumService.registerUsers(user, clientIds, groupAlbum)
+                                userGroupAlbumService.registerUsers(user, users, groupAlbum)
                         )
                 )
         );
@@ -180,14 +181,14 @@ public class GroupAlbumController {
     public ResponseEntity<ApiResult<GroupAlbumResponseDto>> banUserFromGroupAlbum(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 모델", required = true)
-            @RequestBody @Valid GroupAlbumRequestDto groupAlbumRequestDto,
+            @Parameter(description = "단체앨범 사용자 모델", required = true)
+            @RequestBody @Valid GroupAlbumUserDto groupAlbumUserDto,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
 
     ) {
-        List<String> clientIds = groupAlbumRequestDto.getUsers().stream()
-                .map(UserRequestDto::getClientId)
+        List<User> users = groupAlbumUserDto.getUsers().stream()
+                .map(userMapper::toEntity)
                 .collect(Collectors.toList());
 
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
@@ -195,7 +196,7 @@ public class GroupAlbumController {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         groupAlbumMapper.toResponseDto(
-                                userGroupAlbumService.banUsers(user, clientIds, groupAlbum)
+                                userGroupAlbumService.banUsers(user, users, groupAlbum)
                         )
                 )
         );

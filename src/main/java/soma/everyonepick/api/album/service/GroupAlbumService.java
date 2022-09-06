@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import soma.everyonepick.api.album.dto.GroupAlbumRequestDto;
+import soma.everyonepick.api.album.dto.GroupAlbumUpdateDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.repository.GroupAlbumRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
@@ -47,7 +48,7 @@ public class GroupAlbumService {
     /**
      * 단체앨범 생성
      *
-     * @param groupAlbumRequestDto 단체앨범 Dto
+     * @param groupAlbumRequestDto 단체앨범 요청 Dto
      * @param user          방장 사용자 엔티티
      * @return 단체앨범 엔티티
      */
@@ -66,23 +67,23 @@ public class GroupAlbumService {
     /**
      * 단체앨범 수정
      *
-     * @param groupAlbumRequestDto 단체앨범 Dto
+     * @param groupAlbumUpdateDto 단체앨범 수정 Dto
      * @param user 방장 사용자 엔티티
      * @param groupAlbumId 단체앨범 id
      * @return 단체앨범 엔티티
      */
     @Transactional
-    public GroupAlbum updateGroupAlbum(User user, GroupAlbumRequestDto groupAlbumRequestDto, Long groupAlbumId) {
+    public GroupAlbum updateGroupAlbum(User user, GroupAlbumUpdateDto groupAlbumUpdateDto, Long groupAlbumId) {
         GroupAlbum groupAlbum = getGroupAlbumById(groupAlbumId);
         if (user.getId() != groupAlbum.getHostUserId()) {
             throw new UnauthorizedException(NOT_HOST);
         }
 
-        if (getGroupAlbumByTitle(groupAlbumRequestDto.getTitle()) != null) {
+        if (getGroupAlbumByTitle(groupAlbumUpdateDto.getTitle()) != null) {
             throw new BadRequestException(REDUNDANT_TITLE);
         }
 
-        groupAlbum.setTitle(groupAlbumRequestDto.getTitle());
+        groupAlbum.setTitle(groupAlbumUpdateDto.getTitle());
         return groupAlbumRepository.saveAndFlush(groupAlbum);
     }
 }

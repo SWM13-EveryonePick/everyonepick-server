@@ -40,6 +40,18 @@ public class UserService {
     }
 
     /**
+     * 사용자 프로필을 식별자로 조회합니다.
+     * @param clientId 조회하고자 하는 사용자 회원아이디
+     * @return 사용자 엔티티
+     * @throws ResourceNotFoundException 존재하지 않는 회원아이디의 경우
+     */
+    @Transactional(readOnly = true)
+    public User findByClientIdThrowsException(String clientId) {
+        return userRepository.findByClientIdAndIsActive(clientId, true)
+                .orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_USER));
+    }
+
+    /**
      * 사용자 프로필을 조회합니다.
      * @param id 조회하고자 하는 사용자 Id
      * @return 사용자 엔티티

@@ -12,7 +12,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(description = "단체앨범 상세 읽기 모델")
+@Schema(description = "단체앨범 응답모델")
 public class GroupAlbumResponseDto {
     @Schema(description = "id")
     @JsonProperty(index = 0)
