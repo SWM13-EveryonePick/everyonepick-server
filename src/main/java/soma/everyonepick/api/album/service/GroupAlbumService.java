@@ -54,9 +54,6 @@ public class GroupAlbumService {
      */
     @Transactional
     public GroupAlbum createGroupAlbum(User user, GroupAlbumRequestDto groupAlbumRequestDto) {
-        if (getGroupAlbumByTitle(groupAlbumRequestDto.getTitle()) != null) {
-            throw new BadRequestException(REDUNDANT_TITLE);
-        }
         GroupAlbum groupAlbum = GroupAlbum.builder()
                 .title(groupAlbumRequestDto.getTitle())
                 .hostUserId(user.getId())
@@ -77,10 +74,6 @@ public class GroupAlbumService {
         GroupAlbum groupAlbum = getGroupAlbumById(groupAlbumId);
         if (user.getId() != groupAlbum.getHostUserId()) {
             throw new UnauthorizedException(NOT_HOST);
-        }
-
-        if (getGroupAlbumByTitle(groupAlbumUpdateDto.getTitle()) != null) {
-            throw new BadRequestException(REDUNDANT_TITLE);
         }
 
         groupAlbum.setTitle(groupAlbumUpdateDto.getTitle());

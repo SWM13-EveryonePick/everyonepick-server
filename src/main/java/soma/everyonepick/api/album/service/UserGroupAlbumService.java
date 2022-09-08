@@ -140,7 +140,12 @@ public class UserGroupAlbumService {
                 //groupAlbum = deleteGroupAlbum(groupAlbum);
             }
             else {
-                users.remove(user);
+                for (User member : users) {
+                    if (member.getId() == groupAlbum.getHostUserId()) {
+                        users.remove(member);
+                        break;
+                    }
+                }
                 groupAlbum = delegateHost(users, groupAlbum);
             }
         }
@@ -154,7 +159,7 @@ public class UserGroupAlbumService {
      * @param groupAlbum 단체앨범 Entity
      * @retun User 새로운 방장 Entity
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public GroupAlbum delegateHost(List<User> users, GroupAlbum groupAlbum) {
         groupAlbum.setHostUserId(users.get(0).getId());
         return groupAlbumRepository.saveAndFlush(groupAlbum);
