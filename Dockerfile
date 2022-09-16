@@ -1,6 +1,6 @@
 FROM openjdk:11
-WORKDIR app
 EXPOSE 8080
 LABEL maintainer="pyhpyh0670@gmail.com"
-COPY ./build/libs/*.jar app.jar
-CMD ["java","-jar","app.jar"]
+ARG JAR_FILE=./build/libs/everyonepick-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
