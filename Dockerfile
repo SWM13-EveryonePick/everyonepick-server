@@ -1,5 +1,6 @@
 FROM openjdk:11
+WORKDIR app
+EXPOSE 8080
 LABEL maintainer="pyhpyh0670@gmail.com"
-ARG JAR_FILE=*.jar
-COPY build/libs/${JAR_FILE} app.jar
-ENTRYPOINT ["java","-jar","/app.jar"]
+COPY ./build/libs/*.jar app.jar
+CMD ["java","-jar","app.jar"]
