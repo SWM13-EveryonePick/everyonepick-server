@@ -240,7 +240,7 @@ public class GroupAlbumController {
             consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<ApiResult<List<PhotoDto>>> postPhotos(
+    public ResponseEntity<ApiResult<List<PhotoDto.PhotoResponseDto>>> postPhotos(
             @Parameter(hidden = true)
             @CurrentUser User user,
             @Parameter(description = "단체앨범 id", required = true)
