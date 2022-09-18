@@ -7,23 +7,23 @@ import soma.everyonepick.api.album.entity.Photo;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-18T01:08:21+0900",
+    date = "2022-09-18T23:17:05+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component
 public class PhotoMapperImpl implements PhotoMapper {
 
     @Override
-    public PhotoDto toDto(Photo photo) {
+    public PhotoDto.PhotoResponseDto toDto(Photo photo) {
         if ( photo == null ) {
             return null;
         }
 
-        PhotoDto.PhotoDtoBuilder photoDto = PhotoDto.builder();
+        PhotoDto.PhotoResponseDto.PhotoResponseDtoBuilder<?, ?> photoResponseDto = PhotoDto.PhotoResponseDto.builder();
 
-        photoDto.id( photo.getId() );
-        photoDto.photoUrl( photo.getPhotoUrl() );
+        photoResponseDto.id( photo.getId() );
+        photoResponseDto.photoUrl( photo.getPhotoUrl() );
 
-        return photoDto.build();
+        return photoResponseDto.build();
     }
 }

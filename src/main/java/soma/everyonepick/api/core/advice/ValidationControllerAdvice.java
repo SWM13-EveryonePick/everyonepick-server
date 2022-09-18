@@ -13,7 +13,7 @@ import javax.annotation.Priority;
 /**
  * 유효 검증 예외 처리 어드바이스
  */
-@Priority(5)
+
 @RestControllerAdvice
 public class ValidationControllerAdvice extends AbstractControllerAdvice {
     @ExceptionHandler(value = { MethodArgumentNotValidException.class })
