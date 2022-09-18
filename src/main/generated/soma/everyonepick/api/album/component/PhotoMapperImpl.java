@@ -7,7 +7,7 @@ import soma.everyonepick.api.album.entity.Photo;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-07T00:15:01+0900",
+    date = "2022-09-18T01:08:21+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component
