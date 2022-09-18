@@ -8,12 +8,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import soma.everyonepick.api.album.component.GroupAlbumMapper;
 import soma.everyonepick.api.album.component.PhotoMapper;
 import soma.everyonepick.api.album.dto.*;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.service.GroupAlbumService;
 import soma.everyonepick.api.album.service.PhotoService;
+import soma.everyonepick.api.album.service.PhotoUploadService;
 import soma.everyonepick.api.album.service.UserGroupAlbumService;
 import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
@@ -39,6 +41,7 @@ public class GroupAlbumController {
     private final GroupAlbumMapper groupAlbumMapper;
     private final UserGroupAlbumService userGroupAlbumService;
     private final PhotoService photoService;
+    private final PhotoUploadService photoUploadService;
     private final PhotoMapper photoMapper;
     private final UserMapper userMapper;
 
@@ -221,5 +224,29 @@ public class GroupAlbumController {
                                 .collect(Collectors.toList())
                         )
                 );
+    }
+
+    @Operation(description = "단체앨범 사진등록")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "등록 성공")
+    })
+    @PostMapping("/{groupAlbumId}/photo")
+    public ResponseEntity<ApiResult<List<PhotoDto>>> uploadPhotos(
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId,
+            @Parameter(description = "업로드할 이미지 리스트")
+            @RequestParam(name = "images") List<MultipartFile> images
+
+    ) {
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        photoUploadService.uploadPhotos(
+                                        images,
+                                        groupAlbumService.getGroupAlbumById(groupAlbumId)
+                                ).stream()
+                                .map(photoMapper::toDto)
+                                .collect(Collectors.toList())
+                )
+        );
     }
 }
