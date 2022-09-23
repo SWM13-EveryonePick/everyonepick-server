@@ -8,7 +8,7 @@ For further reference, please consider the following sections:
 * [Create an OCI image](https://docs.spring.io/spring-boot/docs/2.6.9/gradle-plugin/reference/html/#build-image)
 * [Spring Boot DevTools](https://docs.spring.io/spring-boot/docs/2.6.9/reference/htmlsingle/#using.devtools)
 * [Spring Configuration Processor](https://docs.spring.io/spring-boot/docs/2.6.9/reference/htmlsingle/#appendix.configuration-metadata.annotation-processor)
-* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.9/reference/htmlsingle/#data.sql.jpa-and-spring-data)
+* [Spring Data JPA](https://docs.spring.io/spring-boot/docs/2.6.9/reference/htmlsingle/#user.sql.jpa-and-spring-data)
 * [Spring Security](https://docs.spring.io/spring-boot/docs/2.6.9/reference/htmlsingle/#web.security)
 * [Flyway Migration](https://docs.spring.io/spring-boot/docs/2.6.9/reference/htmlsingle/#howto.data-initialization.migration-tool.flyway)
 

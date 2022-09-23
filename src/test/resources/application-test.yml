@@ -1,0 +1,21 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+  datasource:
+    driver-class-name: org.h2.Driver
+    url: jdbc:h2:mem:testdb;MODE=MySQL;
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL57Dialect
+    database-platform: org.hibernate.dialect.MySQL57InnoDBDialect
+    generate-ddl: true
+
