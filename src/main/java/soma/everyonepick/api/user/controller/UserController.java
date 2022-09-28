@@ -1,4 +1,4 @@
-package soma.everyonepick.api.user.web;
+package soma.everyonepick.api.user.controller;
 
 
 import io.swagger.v3.oas.annotations.Operation;

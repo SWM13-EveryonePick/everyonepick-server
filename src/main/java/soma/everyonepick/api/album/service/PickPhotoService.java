@@ -1,0 +1,51 @@
+package soma.everyonepick.api.album.service;
+
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import soma.everyonepick.api.album.entity.GroupAlbum;
+import soma.everyonepick.api.album.entity.Photo;
+import soma.everyonepick.api.album.entity.Pick;
+import soma.everyonepick.api.album.entity.PickPhoto;
+import soma.everyonepick.api.album.repository.PickPhotoRepository;
+import soma.everyonepick.api.core.exception.BadRequestException;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static soma.everyonepick.api.core.message.ErrorMessage.WRONG_PHOTO;
+
+@Service
+@RequiredArgsConstructor
+public class PickPhotoService {
+
+    private final PickPhotoRepository pickPhotoRepository;
+
+    /**
+     * 단체앨범 사진선택 작업에 후보 사진들 등록
+     * @param groupAlbum 단체앨범 엔티티
+     * @param pick 사진선택 작업 엔티티
+     * @param photos 사진 리스트
+     * @return Pick 사진선택 작업 엔티티
+     */
+    @Transactional
+    public Pick registerPhotos(GroupAlbum groupAlbum, Pick pick, List<Photo> photos) {
+        List<PickPhoto> pickPhotos = new ArrayList<>();
+
+        for (Photo photo : photos) {
+            if (photo.getGroupAlbum() != groupAlbum) {
+                throw new BadRequestException(WRONG_PHOTO);
+            }
+
+            PickPhoto pickPhoto = PickPhoto
+                    .builder()
+                    .pick(pick)
+                    .photo(photo)
+                    .build();
+            pickPhotos.add(pickPhoto);
+        }
+        pickPhotoRepository.saveAllAndFlush(pickPhotos);
+        return pick;
+    }
+}
