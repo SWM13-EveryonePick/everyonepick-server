@@ -17,4 +17,5 @@ public class ErrorMessage {
 
     public static String HOST_MUST_STAY = "현재 정책상 방장 혼자 남았을 땐 단체앨범을 나갈 수 없습니다. (변경예정)";
     public static String NOT_MEMBER = "해당 방의 멤버가 아닙니다.";
+    public static String WRONG_PHOTO = "현재 단체앨범에 속하지 않는 사진입니다.";
 }
