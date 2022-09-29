@@ -44,12 +44,54 @@ public class PickController {
     private final GroupAlbumService groupAlbumService;
     private final PickMapper pickMapper;
 
+    @Operation(description = "단체앨범 사진선택 작업 목록 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping(value = "")
+    public ResponseEntity<ApiResult<List<PickDto.PickListDto>>> getPicks(
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId
+    ) {
+        GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
+
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        pickService.getPicksByGroupAlbum(groupAlbum).stream()
+                                .map(pickMapper::toListDto)
+                                .collect(Collectors.toList())
+                )
+        );
+    }
+
+    @Operation(description = "단체앨범 사진선택 작업 상세 조회")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "조회 성공")
+    })
+    @GetMapping(value = "/{pickId}")
+    public ResponseEntity<ApiResult<PickDto.PickDetailDto>> getPick(
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId,
+            @Parameter(description = "사진선택 작업 id", required = true)
+            @PathVariable Long pickId
+    ) {
+        GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
+
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        pickMapper.toDetailDto(
+                                pickService.getPickById(pickId)
+                        )
+                )
+        );
+    }
+
     @Operation(description = "단체앨범 사진선택 작업 등록")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "등록 성공")
     })
     @PostMapping(value = "")
-    public ResponseEntity<ApiResult<PickDto>> postPick(
+    public ResponseEntity<ApiResult<PickDto.PickDetailDto>> postPick(
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId,
             @Parameter(description = "사진선택 작업에 포함될 사진들")
@@ -64,7 +106,7 @@ public class PickController {
 
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        pickMapper.toDto(
+                        pickMapper.toDetailDto(
                                 pickPhotoService.registerPhotos(groupAlbum, pick, photos)
                         )
                 )

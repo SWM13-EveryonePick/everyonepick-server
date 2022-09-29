@@ -10,7 +10,7 @@ import java.util.List;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(description = "사진선택 작업 모델")
@@ -28,7 +28,27 @@ public class PickDto {
     @JsonProperty(index = 2)
     private LocalDateTime expired_at;
 
-//    @Schema(description = "사진선택 작업에 포함된 사진들")
-//    @JsonProperty(index = 3)
-//    private List<PhotoDto.PhotoResponseDto> photos;
+    @Getter
+    @Setter
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "사진선택 작업 리스트 모델")
+    public static class PickListDto extends PickDto {
+        @Schema(description = "사진선택 작업 썸네일 이미지")
+        @JsonProperty(index = 3)
+        private PhotoDto.PhotoResponseDto photo;
+    }
+
+    @Getter
+    @Setter
+    @SuperBuilder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Schema(description = "사진선택 작업 상세 모델")
+    public static class PickDetailDto extends PickDto {
+        @Schema(description = "사진선택 작업에 포함된 사진들")
+        @JsonProperty(index = 3)
+        private List<PhotoDto.PhotoResponseDto> photos;
+    }
 }
