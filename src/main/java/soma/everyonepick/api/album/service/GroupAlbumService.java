@@ -26,6 +26,7 @@ public class GroupAlbumService {
      *
      * @param groupAlbumId 조회하고자 하는 단체앨범 id
      * @return 단체앨범 엔티티
+     * @throws ResourceNotFoundException
      */
     @Transactional(readOnly = true)
     public GroupAlbum getGroupAlbumById(Long groupAlbumId) {

@@ -7,24 +7,43 @@ import soma.everyonepick.api.album.entity.Pick;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-09-29T03:08:19+0900",
+    date = "2022-09-29T22:51:31+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component
-public class PickMapperImpl implements PickMapper {
+public class PickMapperImpl extends PickMapper {
 
     @Override
-    public PickDto toDto(Pick pick) {
+    public PickDto.PickListDto toListDto(Pick pick) {
         if ( pick == null ) {
             return null;
         }
 
-        PickDto.PickDtoBuilder pickDto = PickDto.builder();
+        PickDto.PickListDto.PickListDtoBuilder<?, ?> pickListDto = PickDto.PickListDto.builder();
 
-        pickDto.id( pick.getId() );
-        pickDto.isDone( pick.getIsDone() );
-        pickDto.expired_at( pick.getExpired_at() );
+        pickListDto.id( pick.getId() );
+        pickListDto.isDone( pick.getIsDone() );
+        pickListDto.expired_at( pick.getExpired_at() );
 
-        return pickDto.build();
+        pickListDto.photo( getPhotoDto(pick) );
+
+        return pickListDto.build();
+    }
+
+    @Override
+    public PickDto.PickDetailDto toDetailDto(Pick pick) {
+        if ( pick == null ) {
+            return null;
+        }
+
+        PickDto.PickDetailDto.PickDetailDtoBuilder<?, ?> pickDetailDto = PickDto.PickDetailDto.builder();
+
+        pickDetailDto.id( pick.getId() );
+        pickDetailDto.isDone( pick.getIsDone() );
+        pickDetailDto.expired_at( pick.getExpired_at() );
+
+        pickDetailDto.photos( getPhotoDtos(pick) );
+
+        return pickDetailDto.build();
     }
 }

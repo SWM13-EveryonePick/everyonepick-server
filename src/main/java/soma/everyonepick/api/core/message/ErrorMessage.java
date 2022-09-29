@@ -9,6 +9,7 @@ public class ErrorMessage {
     public static String NOT_EXIST_GROUP_ALBUM = "존재하지 않는 단체앨범입니다.";
     public static String NOT_EXIST_HOST = "멤버에 방장이 포함되어있지 않습니다.";
     public static String NOT_EXIST_PHOTO = "존재하지 않는 사진입니다.";
+    public static String NOT_EXIST_PICK = "존재하지 않는 사진선택 작업입니다.";
 
     @Deprecated
     public static String REDUNDANT_TITLE = "이미 존재하는 단체앨범 제목입니다.";
