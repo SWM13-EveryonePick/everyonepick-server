@@ -23,10 +23,20 @@ public class PickInfoService {
      * 단체앨범의 사진선택 정보 조회
      *
      * @param pick 사진선택 작업 엔티티
-     * @return PickInfoUser 사진선택 정보
+     * @return PickInfoUser 사진선택 현황
      */
     public PickInfoUser getPickInfoByPick(Pick pick) {
         return pickInfoUserRepository.findById(pick.getId().toString())
                 .orElseThrow(()->new ResourceNotFoundException(NOT_EXIST_PICK));
+    }
+
+    /**
+     * 단체앨범의 사진선택 정보 등록
+     *
+     * @param pickInfoUser 사진선택 현황 엔티티
+     * @return PickInfoUser 사진선택 현황
+     */
+    public PickInfoUser createPickInfo(PickInfoUser pickInfoUser) {
+        return pickInfoUserRepository.save(pickInfoUser);
     }
 }
