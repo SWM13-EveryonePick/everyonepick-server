@@ -75,8 +75,6 @@ public class PickController {
             @Parameter(description = "사진선택 작업 id", required = true)
             @PathVariable Long pickId
     ) {
-        GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-
         return ResponseEntity.ok(
                 ApiResult.ok(
                         pickMapper.toDetailDto(
