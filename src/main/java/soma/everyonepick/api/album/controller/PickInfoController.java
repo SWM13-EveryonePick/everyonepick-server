@@ -8,16 +8,17 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.PickInfoMapper;
 import soma.everyonepick.api.album.dto.PickDto;
 import soma.everyonepick.api.album.dto.PickInfoResponseDto;
+import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.service.PickInfoService;
 import soma.everyonepick.api.album.service.PickService;
 import soma.everyonepick.api.core.dto.ApiResult;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 사진선택 정보 관련 Endpoint
@@ -48,6 +49,37 @@ public class PickInfoController {
                                 pickInfoService.getPickInfoByPick(
                                         pickService.getPickById(pickId)
                                 )
+                        )
+                )
+        );
+    }
+
+    @Operation(description = "단체앨범 사진선택 정보 등록")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "등록 성공")
+    })
+    @PostMapping(value = "")
+    public ResponseEntity<ApiResult<PickInfoResponseDto>> postPickInfo(
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId,
+            @Parameter(description = "사진선택 작업 id", required = true)
+            @PathVariable Long pickId
+    ) {
+        List<Long> userIds = new ArrayList<>();
+        userIds.add(6L);
+        userIds.add(7L);
+
+        PickInfoUser pickInfoUser = PickInfoUser
+                .builder()
+                .pickId(pickId.toString())
+                .timeOut(3600L)
+                .userIds(userIds)
+                .build();
+
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        pickInfoMapper.toDto(
+                                pickInfoService.createPickInfo(pickInfoUser)
                         )
                 )
         );
