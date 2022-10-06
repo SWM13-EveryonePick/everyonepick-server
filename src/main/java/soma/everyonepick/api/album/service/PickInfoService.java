@@ -3,14 +3,10 @@ package soma.everyonepick.api.album.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.repository.PickInfoUserRepository;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
-
-import java.util.List;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_PICK;
 

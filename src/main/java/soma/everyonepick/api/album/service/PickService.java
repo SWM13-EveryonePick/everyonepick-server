@@ -7,10 +7,12 @@ import soma.everyonepick.api.album.dto.PickDto;
 import soma.everyonepick.api.album.dto.PickRequestDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Pick;
+import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.repository.PickRepository;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_PICK;
@@ -19,6 +21,7 @@ import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_PICK;
 @RequiredArgsConstructor
 public class PickService {
     private final PickRepository pickRepository;
+    private final PickInfoService pickInfoService;
 
     /**
      * 단체앨범의 사진선택 작업 목록 조회
@@ -54,13 +57,24 @@ public class PickService {
     @Transactional
     public Pick createPick(GroupAlbum groupAlbum, PickRequestDto pickRequestDto) {
         Long timeOut = pickRequestDto.getTimeOut();
-        LocalDateTime expired_at = LocalDateTime.now().plusMinutes(timeOut);
+
         Pick pick = Pick
                 .builder()
-                .expired_at(expired_at)
                 .groupAlbum(groupAlbum)
                 .build();
+        pick = pickRepository.saveAndFlush(pick);
 
-        return pickRepository.saveAndFlush(pick);
+        List<Long> userIds = new ArrayList<>();
+
+        PickInfoUser pickInfoUser = PickInfoUser
+                .builder()
+                .pickId(pick.getId().toString())
+                .timeOut(timeOut)
+                .userIds(userIds)
+                .build();
+
+        pickInfoService.createPickInfo(pickInfoUser);
+
+        return pick;
     }
 }

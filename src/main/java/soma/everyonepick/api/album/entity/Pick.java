@@ -28,9 +28,6 @@ public class Pick {
     @Builder.Default
     private Boolean isActive = true;
 
-    @Column
-    private LocalDateTime expired_at;
-
     @CreationTimestamp
     private LocalDateTime createdAt;
 
