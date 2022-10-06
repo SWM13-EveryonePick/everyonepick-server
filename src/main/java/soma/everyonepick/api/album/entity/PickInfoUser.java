@@ -17,6 +17,7 @@ import java.util.List;
 public class PickInfoUser {
     @Id
     String pickId;
+
     List<Long> userIds;
 
     @TimeToLive
