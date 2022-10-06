@@ -9,6 +9,7 @@ import soma.everyonepick.api.album.service.PickService;
 import soma.everyonepick.api.album.service.UserGroupAlbumService;
 import soma.everyonepick.api.user.entity.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.lang.Long.parseLong;
@@ -21,6 +22,11 @@ public class PickInfoMapper {
 
     public PickInfoResponseDto toDto(PickInfoUser pickInfoUser) {
         List<Long> userIds = pickInfoUser.getUserIds();
+
+        if (userIds == null) {
+            userIds = new ArrayList<>();
+        }
+
 
         Pick pick = pickService.getPickById(parseLong(pickInfoUser.getPickId()));
         List<User> users = userGroupAlbumService.getMembers(pick.getGroupAlbum());
