@@ -21,15 +21,15 @@ public class PickInfoMapper {
 
     public PickInfoResponseDto toDto(PickInfoUser pickInfoUser) {
         List<Long> userIds = pickInfoUser.getUserIds();
-        Pick pick = pickService.getPickById(parseLong(pickInfoUser.getPickId()));
 
+        Pick pick = pickService.getPickById(parseLong(pickInfoUser.getPickId()));
         List<User> users = userGroupAlbumService.getMembers(pick.getGroupAlbum());
         Long timeOut = pickInfoUser.getTimeOut();
 
         return PickInfoResponseDto
                 .builder()
-                .pickUserCnt(userIds.stream().count())
-                .userCnt(users.stream().count())
+                .pickUserCnt((long) userIds.size())
+                .userCnt((long) users.size())
                 .timeOut(timeOut)
                 .build();
     }
