@@ -10,13 +10,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.PickInfoMapper;
-import soma.everyonepick.api.album.dto.PickDto;
+import soma.everyonepick.api.album.dto.PhotoDto;
+import soma.everyonepick.api.album.dto.PhotoRequestDto;
 import soma.everyonepick.api.album.dto.PickInfoResponseDto;
+import soma.everyonepick.api.album.entity.Photo;
+import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.PickInfoUser;
+import soma.everyonepick.api.album.service.PhotoService;
 import soma.everyonepick.api.album.service.PickInfoService;
 import soma.everyonepick.api.album.service.PickService;
+import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
+import soma.everyonepick.api.user.entity.User;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +38,7 @@ public class PickInfoController {
     private final PickInfoMapper pickInfoMapper;
     private final PickInfoService pickInfoService;
     private final PickService pickService;
+    private final PhotoService photoService;
 
     @Operation(description = "단체앨범 사진선택 정보 조회")
     @ApiResponses({
@@ -60,26 +68,30 @@ public class PickInfoController {
     })
     @PostMapping(value = "")
     public ResponseEntity<ApiResult<PickInfoResponseDto>> postPickInfo(
+            @Parameter(hidden = true)
+            @CurrentUser User user,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId,
             @Parameter(description = "사진선택 작업 id", required = true)
-            @PathVariable Long pickId
+            @PathVariable Long pickId,
+            @Parameter(description = "단체앨범 사진 요청 모델")
+            @RequestBody @Valid PhotoRequestDto photoRequestDto
     ) {
-        List<Long> userIds = new ArrayList<>();
-        userIds.add(6L);
-        userIds.add(7L);
+        List<PhotoDto> photoDtos = photoRequestDto.getPhotos();
+        List<Photo> photos = new ArrayList<>();
 
-        PickInfoUser pickInfoUser = PickInfoUser
-                .builder()
-                .pickId(pickId.toString())
-                .timeOut(3600L)
-                .userIds(userIds)
-                .build();
+        if (photoDtos.size() != 0) {
+            for (PhotoDto photoDto: photoDtos) {
+                photos.add(photoService.getPhotosById(photoDto.getId()));
+            }
+        }
+
+        Pick pick = pickService.getPickById(pickId);
 
         return ResponseEntity.ok(
                 ApiResult.ok(
                         pickInfoMapper.toDto(
-                                pickInfoService.createPickInfo(pickInfoUser)
+                                pickInfoService.createPickInfo(user, pick, photos)
                         )
                 )
         );
