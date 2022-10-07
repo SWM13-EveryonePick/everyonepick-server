@@ -1,0 +1,2 @@
+insert into user_album (id, is_active, created_at, updated_at, album_id, user_id) VALUES (1, true, '2022-10-06 13:35:55', '2022-10-06 13:35:55', 1, 1);
+insert into user_album (id, is_active, created_at, updated_at, album_id, user_id) VALUES (2, true, '2022-10-06 13:35:55', '2022-10-06 13:35:55', 1, 2);

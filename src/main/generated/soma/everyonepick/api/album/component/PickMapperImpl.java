@@ -7,7 +7,7 @@ import soma.everyonepick.api.album.entity.Pick;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-10-05T17:14:17+0900",
+    date = "2022-10-07T15:18:09+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component
@@ -22,8 +22,6 @@ public class PickMapperImpl extends PickMapper {
         PickDto.PickListDto.PickListDtoBuilder<?, ?> pickListDto = PickDto.PickListDto.builder();
 
         pickListDto.id( pick.getId() );
-        pickListDto.isDone( pick.getIsDone() );
-        pickListDto.expired_at( pick.getExpired_at() );
 
         pickListDto.photo( getPhotoDto(pick) );
 
@@ -39,8 +37,6 @@ public class PickMapperImpl extends PickMapper {
         PickDto.PickDetailDto.PickDetailDtoBuilder<?, ?> pickDetailDto = PickDto.PickDetailDto.builder();
 
         pickDetailDto.id( pick.getId() );
-        pickDetailDto.isDone( pick.getIsDone() );
-        pickDetailDto.expired_at( pick.getExpired_at() );
 
         pickDetailDto.photos( getPhotoDtos(pick) );
 

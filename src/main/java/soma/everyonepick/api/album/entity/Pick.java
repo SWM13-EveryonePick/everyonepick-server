@@ -22,10 +22,6 @@ public class Pick {
 
     @Column(nullable = false)
     @Builder.Default
-    private Boolean isDone = false;
-
-    @Column(nullable = false)
-    @Builder.Default
     private Boolean isActive = true;
 
     @CreationTimestamp

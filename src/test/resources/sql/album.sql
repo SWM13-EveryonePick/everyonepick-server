@@ -1,0 +1,2 @@
+insert into album (id, title, host_user_id, is_active, created_at, updated_at) values (1, 'SOMA 13th', 1, true, '2022-06-10 21:18:58', '2022-06-10 21:19:00');
+insert into album (id, title, host_user_id, is_active, created_at, updated_at) values (2, '선릉역 맛집탐방', 2, true, '2022-06-10 21:18:58', '2022-06-10 21:19:00');

@@ -17,10 +17,7 @@ import soma.everyonepick.api.album.dto.PickRequestDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Photo;
 import soma.everyonepick.api.album.entity.Pick;
-import soma.everyonepick.api.album.service.GroupAlbumService;
-import soma.everyonepick.api.album.service.PhotoService;
-import soma.everyonepick.api.album.service.PickPhotoService;
-import soma.everyonepick.api.album.service.PickService;
+import soma.everyonepick.api.album.service.*;
 import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
 import soma.everyonepick.api.user.entity.User;
@@ -42,6 +39,7 @@ public class PickController {
     private final PhotoService photoService;
     private final PickPhotoService pickPhotoService;
     private final GroupAlbumService groupAlbumService;
+    private final PickInfoService pickInfoService;
     private final PickMapper pickMapper;
 
     @Operation(description = "단체앨범 사진선택 작업 목록 조회")
@@ -50,17 +48,28 @@ public class PickController {
     })
     @GetMapping(value = "")
     public ResponseEntity<ApiResult<List<PickDto.PickListDto>>> getPicks(
+            @Parameter(hidden = true)
+            @CurrentUser User user,
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
+        List<PickDto.PickListDto> pickListDtos = pickService.getPicksByGroupAlbum(groupAlbum).stream()
+                .map(pickMapper::toListDto)
+                .collect(Collectors.toList());
+
+        for (PickDto.PickListDto pickListDto : pickListDtos) {
+            Pick pick = pickService.getPickById(pickListDto.getId());
+            List<Long> userIds = pickInfoService.getPickInfoByPick(pick).getUserIds();
+
+            pickListDto.setIsDone(
+                    userIds.stream()
+                            .anyMatch(s -> s.equals(user.getId()))
+            );
+        }
 
         return ResponseEntity.ok(
-                ApiResult.ok(
-                        pickService.getPicksByGroupAlbum(groupAlbum).stream()
-                                .map(pickMapper::toListDto)
-                                .collect(Collectors.toList())
-                )
+                ApiResult.ok(pickListDtos)
         );
     }
 
