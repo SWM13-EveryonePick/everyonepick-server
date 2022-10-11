@@ -6,12 +6,9 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import soma.everyonepick.api.album.component.PickMapper;
-import soma.everyonepick.api.album.dto.PhotoDto;
 import soma.everyonepick.api.album.dto.PickDto;
 import soma.everyonepick.api.album.dto.PickRequestDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
@@ -23,6 +20,7 @@ import soma.everyonepick.api.core.dto.ApiResult;
 import soma.everyonepick.api.user.entity.User;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,22 +52,12 @@ public class PickController {
             @PathVariable Long groupAlbumId
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-        List<PickDto.PickListDto> pickListDtos = pickService.getPicksByGroupAlbum(groupAlbum).stream()
-                .map(pickMapper::toListDto)
-                .collect(Collectors.toList());
-
-        for (PickDto.PickListDto pickListDto : pickListDtos) {
-            Pick pick = pickService.getPickById(pickListDto.getId());
-            List<Long> userIds = pickInfoService.getPickInfoByPick(pick).getUserIds();
-
-            pickListDto.setIsDone(
-                    userIds.stream()
-                            .anyMatch(s -> s.equals(user.getId()))
-            );
-        }
+        List<Pick> picks = pickService.getPicksByGroupAlbum(groupAlbum);
 
         return ResponseEntity.ok(
-                ApiResult.ok(pickListDtos)
+                ApiResult.ok(
+                        setIsDoneFlags(user, picks)
+                )
         );
     }
 
@@ -118,5 +106,24 @@ public class PickController {
                         )
                 )
         );
+    }
+
+    private List<PickDto.PickListDto> setIsDoneFlags(User user, List<Pick> picks) {
+        List<PickDto.PickListDto> pickListDtos = new ArrayList<>();
+
+        for (Pick pick : picks) {
+            List<Long> userIds = pickInfoService.getPickInfoByPick(pick).getUserIds();
+            PickDto.PickListDto pickListDto = pickMapper.toListDto(pick);
+            pickListDto.setIsDone(false);
+
+            if (userIds != null) {
+                pickListDto.setIsDone(
+                        userIds.stream()
+                                .anyMatch(s -> s.equals(user.getId()))
+                );
+            }
+            pickListDtos.add(pickListDto);
+        }
+        return pickListDtos;
     }
 }
