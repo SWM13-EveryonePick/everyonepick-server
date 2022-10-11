@@ -23,5 +23,5 @@ public interface PhotoRepository extends JpaRepository<Photo, Long> {
      * @param isActive
      * @return List<Photo>
      */
-    List<Photo> findAllByGroupAlbumAndIsActive(GroupAlbum groupAlbum, boolean isActive);
+    List<Photo> findAllByGroupAlbumAndIsActiveOrderByCreatedAtDesc(GroupAlbum groupAlbum, boolean isActive);
 }

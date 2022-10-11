@@ -30,7 +30,7 @@ public class PhotoService {
      */
     @Transactional(readOnly = true)
     public List<Photo> getPhotosByGroupAlbum(GroupAlbum groupAlbum) {
-        return photoRepository.findAllByGroupAlbumAndIsActive(groupAlbum, true);
+        return photoRepository.findAllByGroupAlbumAndIsActiveOrderByCreatedAtDesc(groupAlbum, true);
     }
 
     /**
