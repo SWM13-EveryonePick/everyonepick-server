@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import soma.everyonepick.api.album.component.ResultPhotoMapper;
 import soma.everyonepick.api.album.dto.ResultPhotoDto;
-import soma.everyonepick.api.album.service.PickService;
+import soma.everyonepick.api.album.service.GroupAlbumService;
 import soma.everyonepick.api.album.service.ResultPhotoService;
 import soma.everyonepick.api.core.dto.ApiResult;
 
@@ -27,10 +27,10 @@ import java.util.stream.Collectors;
 @Tag(description = "합성완료 사진 관련 Endpoint", name = "합성완료 사진")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/album/{groupAlbumId}/pick/{pickId}/result")
+@RequestMapping("/api/album/{groupAlbumId}/result")
 public class ResultPhotoController {
     private final ResultPhotoService resultPhotoService;
-    private final PickService pickService;
+    private final GroupAlbumService groupAlbumService;
     private final ResultPhotoMapper resultPhotoMapper;
 
     @Operation(description = "합성완료 사진조회")
@@ -40,14 +40,12 @@ public class ResultPhotoController {
     @GetMapping("")
     public ResponseEntity<ApiResult<List<ResultPhotoDto>>> getResultPhotos(
             @Parameter(description = "단체앨범 id", required = true)
-            @PathVariable Long groupAlbumId,
-            @Parameter(description = "사진선택 작업 id", required = true)
-            @PathVariable Long pickId
+            @PathVariable Long groupAlbumId
     ) {
         return ResponseEntity.ok(
                 ApiResult.ok(
-                        resultPhotoService.getResultPhotosByPick(
-                                pickService.getPickById(pickId)
+                        resultPhotoService.getResultPhotosByGroupAlbum(
+                                groupAlbumService.getGroupAlbumById(groupAlbumId)
                         ).stream()
                                 .map(resultPhotoMapper::toDto)
                                 .collect(Collectors.toList())
