@@ -34,6 +34,6 @@ public class ResultPhoto {
     private LocalDateTime updatedAt;
 
     @ManyToOne
-    @JoinColumn(name = "pick_id")
-    private Pick pick;
+    @JoinColumn(name = "album_id")
+    private GroupAlbum groupAlbum;
 }
