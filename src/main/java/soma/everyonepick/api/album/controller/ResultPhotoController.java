@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import soma.everyonepick.api.album.component.ResultPhotoMapper;
-import soma.everyonepick.api.album.dto.PhotoDto;
 import soma.everyonepick.api.album.dto.ResultPhotoDto;
 import soma.everyonepick.api.album.service.PickService;
 import soma.everyonepick.api.album.service.ResultPhotoService;
