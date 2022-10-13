@@ -11,6 +11,7 @@ public class ErrorMessage {
     public static String NOT_EXIST_PHOTO = "존재하지 않는 사진입니다.";
     public static String NOT_EXIST_PICK = "존재하지 않는 사진선택 작업입니다.";
     public static String NOT_EXIST_PICK_INFO = "존재하지 않는 사진선택 정보입니다.";
+    public static String NOT_EXIST_RESULT_PHOTO = "존재하지 않는 합성완료사진입니다.";
 
     public static String NOT_HOST = "방장 권한이 없습니다.";
     public static String NOT_MEMBER = "해당 방의 멤버가 아닙니다.";

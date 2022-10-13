@@ -10,5 +10,5 @@ import soma.everyonepick.api.album.entity.ResultPhoto;
         unmappedTargetPolicy = ReportingPolicy.IGNORE
 )
 public interface ResultPhotoMapper {
-    ResultPhotoDto toDto(ResultPhoto resultphoto);
+    ResultPhotoDto.ResultPhotoResponseDto toResponseDto(ResultPhoto resultphoto);
 }
