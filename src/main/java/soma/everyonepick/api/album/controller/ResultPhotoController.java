@@ -8,16 +8,19 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.ResultPhotoMapper;
 import soma.everyonepick.api.album.dto.ResultPhotoDto;
+import soma.everyonepick.api.album.dto.ResultPhotoRequestDto;
+import soma.everyonepick.api.album.entity.ResultPhoto;
 import soma.everyonepick.api.album.service.GroupAlbumService;
 import soma.everyonepick.api.album.service.ResultPhotoService;
+import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
+import soma.everyonepick.api.user.entity.User;
 
+import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,7 +38,7 @@ public class ResultPhotoController {
 
     @Operation(description = "합성완료 사진조회")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "성공")
+            @ApiResponse(responseCode = "200", description = "조회성공")
     })
     @GetMapping("")
     public ResponseEntity<ApiResult<List<ResultPhotoDto>>> getResultPhotos(
@@ -47,7 +50,41 @@ public class ResultPhotoController {
                         resultPhotoService.getResultPhotosByGroupAlbum(
                                 groupAlbumService.getGroupAlbumById(groupAlbumId)
                         ).stream()
-                                .map(resultPhotoMapper::toDto)
+                                .map(resultPhotoMapper::toResponseDto)
+                                .collect(Collectors.toList())
+                )
+        );
+    }
+
+    @Operation(description = "합성완료 사진삭제")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "삭제성공")
+    })
+    @DeleteMapping("")
+    public ResponseEntity<ApiResult<List<ResultPhotoDto.ResultPhotoResponseDto>>> deleteResults(
+            @Parameter(hidden = true)
+            @CurrentUser User user,
+            @Parameter(description = "단체앨범 id", required = true)
+            @PathVariable Long groupAlbumId,
+            @Parameter(description = "합성완료사진 요청 모델")
+            @RequestBody @Valid ResultPhotoRequestDto resultPhotoRequestDto
+            ) {
+        List<ResultPhoto> resultPhotos = new ArrayList<>();
+
+        for (ResultPhotoDto resultPhotoDto : resultPhotoRequestDto.getResultPhotos()) {
+            resultPhotos.add(
+                    resultPhotoService.getResultPhoto(resultPhotoDto.getId())
+            );
+        }
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        resultPhotoService.deleteResultPhotos(
+                                        user,
+                                        groupAlbumService.getGroupAlbumById(groupAlbumId),
+                                        resultPhotos
+                                )
+                                .stream()
+                                .map(resultPhotoMapper::toResponseDto)
                                 .collect(Collectors.toList())
                 )
         );
