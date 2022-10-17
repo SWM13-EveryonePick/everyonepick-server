@@ -10,7 +10,7 @@ import soma.everyonepick.api.core.exception.*;
 import javax.annotation.Priority;
 
 /**
- * 기본 컨트롤러 어드바이스, 사실상 그냥 예외 핸들러
+ * 예외 핸들러
  */
 @RestControllerAdvice
 public class DefaultControllerAdvice extends AbstractControllerAdvice {

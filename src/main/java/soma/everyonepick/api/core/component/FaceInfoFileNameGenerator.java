@@ -1,13 +1,14 @@
 package soma.everyonepick.api.core.component;
 
-import org.springframework.context.annotation.Primary;
+
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
 @Component
-@Primary
-public class UuidFileNameGenerator implements FileNameGenerator {
+@Qualifier("faceInfoFileNameGenerator")
+public class FaceInfoFileNameGenerator implements FileNameGenerator{
     private static final String UNDER_DASH = "_";
 
     /**
@@ -17,6 +18,6 @@ public class UuidFileNameGenerator implements FileNameGenerator {
      */
     @Override
     public String generate(String originalFileName) {
-        return UUID.randomUUID() + UNDER_DASH + originalFileName;
+        return "face" + UNDER_DASH + UUID.randomUUID();
     }
 }

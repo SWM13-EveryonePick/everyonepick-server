@@ -26,9 +26,6 @@ public class S3FileUploader implements FileUploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-//    @Value("")
-//    private String domainUri;
-
     /**
      * 멀티파트 파일을 업로드합니다.
      * @param mFile 업로드 될 파일
