@@ -5,6 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @Builder
@@ -18,5 +20,5 @@ public class FaceInfoDto {
 
     @Schema(description = "얼굴 임베딩 정보")
     @JsonProperty(index = 1)
-    private String faceFeature;
+    private List<Double> faceFeature;
 }
