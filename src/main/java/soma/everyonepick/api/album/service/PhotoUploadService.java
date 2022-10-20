@@ -30,8 +30,9 @@ public class PhotoUploadService {
 
     /**
      * Multipart File 들을 업로드하고, Photo들을 생성한다.
-     *
+     * @param user 로그인한 사용자
      * @param imageFiles 요청으로 들어온 Multipart File List
+     * @param groupAlbum 단체앨범 엔티티
      * @return 저장 결과 Photo 리스트
      */
     @Transactional
