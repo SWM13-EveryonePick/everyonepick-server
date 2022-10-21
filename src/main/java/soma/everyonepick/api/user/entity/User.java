@@ -38,6 +38,10 @@ public class User {
 
     @Column(nullable = false)
     @Builder.Default
+    private Boolean isRegistered = false;
+
+    @Column(nullable = false)
+    @Builder.Default
     private Boolean isActive = true;
 
     @CreationTimestamp
