@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 @Tag(description = "단체포즈 관련 Endpoint", name = "단체포즈")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/pose")
+@RequestMapping("/api/v1/poses")
 public class PoseController {
     private final PoseService poseService;
     private final PoseMapper poseMapper;

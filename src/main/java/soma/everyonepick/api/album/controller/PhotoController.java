@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @Tag(description = "단체앨범 사진 관련 Endpoint", name = "단체앨범 사진")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/album/{groupAlbumId}/photo")
+@RequestMapping("/api/v1/albums/{groupAlbumId}/photos")
 public class PhotoController {
     private final GroupAlbumService groupAlbumService;
     private final PhotoService photoService;

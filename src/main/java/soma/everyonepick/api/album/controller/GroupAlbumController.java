@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 @Tag(description = "단체앨범 관련 Endpoint", name = "단체앨범")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/album")
+@RequestMapping("/api/v1/albums")
 public class GroupAlbumController {
     private final GroupAlbumService groupAlbumService;
     private final GroupAlbumMapper groupAlbumMapper;

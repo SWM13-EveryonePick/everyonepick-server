@@ -26,7 +26,7 @@ import javax.validation.Valid;
 @Tag(description = "사용자 인증 관련 엔드포인트", name = "사용자 인증")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class UserAuthController {
     private final UserSignUpService signUpService;
     private final JwtService jwtService;

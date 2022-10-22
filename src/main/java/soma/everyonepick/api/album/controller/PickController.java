@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 @Tag(description = "사진선택 관련 Endpoint", name = "사진선택")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/album/{groupAlbumId}/pick")
+@RequestMapping("/api/v1/albums/{groupAlbumId}/picks")
 public class PickController {
 
     private final PickService pickService;
