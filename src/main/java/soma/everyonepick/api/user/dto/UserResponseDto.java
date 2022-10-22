@@ -32,6 +32,10 @@ public class UserResponseDto {
     @Schema(description = "푸쉬알림 동의 여부")
     @JsonProperty(index = 4)
     private Boolean isPushActive;
+
+    @Schema(description = "얼굴정보 등록여부")
+    @JsonProperty(index = 5)
+    private Boolean isRegistered;
 }
 
 
