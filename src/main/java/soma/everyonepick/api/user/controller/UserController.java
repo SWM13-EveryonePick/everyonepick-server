@@ -33,7 +33,7 @@ import java.util.List;
 @Tag(description = "사용자 정보 관련 Endpoint", name = "사용자 정보")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/user")
+@RequestMapping("/api/v1/users")
 public class UserController {
     private final UserService userService;
     private final UserMapper userMapper;

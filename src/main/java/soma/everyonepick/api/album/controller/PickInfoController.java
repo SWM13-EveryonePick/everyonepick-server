@@ -33,7 +33,7 @@ import java.util.List;
 @Tag(description = "사진선택 정보 관련 Endpoint", name = "사진선택 정보")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/album/{groupAlbumId}/pick/{pickId}/pick-info")
+@RequestMapping("/api/v1/picks/{pickId}/pick-info")
 public class PickInfoController {
     private final PickInfoMapper pickInfoMapper;
     private final PickInfoService pickInfoService;
@@ -46,8 +46,6 @@ public class PickInfoController {
     })
     @GetMapping(value = "")
     public ResponseEntity<ApiResult<PickInfoResponseDto>> getPickInfo(
-            @Parameter(description = "단체앨범 id", required = true)
-            @PathVariable Long groupAlbumId,
             @Parameter(description = "사진선택 작업 id", required = true)
             @PathVariable Long pickId
     ) {
@@ -70,8 +68,6 @@ public class PickInfoController {
     public ResponseEntity<ApiResult<PickInfoResponseDto>> postPickInfo(
             @Parameter(hidden = true)
             @CurrentUser User user,
-            @Parameter(description = "단체앨범 id", required = true)
-            @PathVariable Long groupAlbumId,
             @Parameter(description = "사진선택 작업 id", required = true)
             @PathVariable Long pickId,
             @Parameter(description = "단체앨범 사진 요청 모델")
