@@ -19,9 +19,9 @@ import soma.everyonepick.api.core.jwt.component.JwtAuthenticationFilter;
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public static final String[] EXCLUDED_URLS = {
-            "/api/test*",
-            "/api/auth/refresh",
-            "/api/auth/signup",
+            "/api/v1/test*",
+            "/api/v1/auth/refresh",
+            "/api/v1/auth/signup",
 
             "/configuration/ui",
             "/swagger-resources/**",
