@@ -23,7 +23,7 @@ public class KafkaTopicConfig {
     }
 
     @Bean
-    public NewTopic setTopic() {
-        return new NewTopic("", 1, (short) 1);
+    public NewTopic topic() {
+        return new NewTopic("everyonepick.faceswap.request", 1, (short) 1);
     }
 }
