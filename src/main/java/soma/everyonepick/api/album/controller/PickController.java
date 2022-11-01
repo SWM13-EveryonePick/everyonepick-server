@@ -14,6 +14,7 @@ import soma.everyonepick.api.album.dto.PickRequestDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Photo;
 import soma.everyonepick.api.album.entity.Pick;
+import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.service.*;
 import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
@@ -52,7 +53,9 @@ public class PickController {
             @PathVariable Long groupAlbumId
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-        List<Pick> picks = pickService.getPicksByGroupAlbum(groupAlbum);
+        List<Pick> picks = pickService.getPicksByGroupAlbum(groupAlbum).stream()
+                .filter(this::pickValidator)
+                .collect(Collectors.toList());
 
         return ResponseEntity.ok(
                 ApiResult.ok(
@@ -93,7 +96,7 @@ public class PickController {
             @RequestBody @Valid PickRequestDto pickRequestDto
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-        Pick pick = pickService.createPick(groupAlbum, pickRequestDto);
+        Pick pick = pickService.createPick(groupAlbum);
 
         List<Photo> photos = pickRequestDto.getPhotos().stream()
                 .map(s -> photoService.getPhotosById(s.getId()))
@@ -112,7 +115,7 @@ public class PickController {
         List<PickDto.PickListDto> pickListDtos = new ArrayList<>();
 
         for (Pick pick : picks) {
-            List<Long> userIds = pickInfoService.getPickInfoByPick(pick).getUserIds();
+            List<Long> userIds = pickInfoService.getPickInfoThrows(pick).getUserIds();
             PickDto.PickListDto pickListDto = pickMapper.toListDto(pick);
             pickListDto.setIsDone(false);
 
@@ -125,5 +128,15 @@ public class PickController {
             pickListDtos.add(pickListDto);
         }
         return pickListDtos;
+    }
+
+    private Boolean pickValidator(Pick pick) {
+        PickInfoUser pickInfoUser = pickInfoService.getPickInfo(pick).orElse(null);
+
+        if (pickInfoUser == null) {
+            pickService.deletePick(pick);
+            return false;
+        }
+        return true;
     }
 }
