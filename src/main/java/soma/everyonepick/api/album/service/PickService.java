@@ -52,27 +52,28 @@ public class PickService {
      * 단체앨범의 사진선택 작업 등록
      *
      * @param groupAlbum 단체앨범 엔티티
-     * @param pickRequestDto 사진선택 작업 요청 모델
      * @return Pick 사진선택 작업 엔티티
      */
     @Transactional
-    public Pick createPick(GroupAlbum groupAlbum, PickRequestDto pickRequestDto) {
-        Long timeOut = pickRequestDto.getTimeOut();
-
+    public Pick createPick(GroupAlbum groupAlbum) {
         Pick pick = Pick
                 .builder()
                 .groupAlbum(groupAlbum)
                 .build();
         pick = pickRepository.saveAndFlush(pick);
 
-        PickInfoUser pickInfoUser = PickInfoUser
-                .builder()
-                .pickId(pick.getId().toString())
-                .timeOut(timeOut)
-                .build();
-
-        pickInfoUserRepository.save(pickInfoUser);
-
         return pick;
+    }
+
+    /**
+     * 단체앨범의 사진선택 작업 삭제
+     *
+     * @param pick 사진선택 작업 엔티티
+     * @return Pick 사진선택 작업 엔티티
+     */
+    @Transactional
+    public Pick deletePick(Pick pick) {
+        pick.setIsActive(false);
+        return pickRepository.saveAndFlush(pick);
     }
 }

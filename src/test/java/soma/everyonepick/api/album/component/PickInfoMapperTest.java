@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import soma.everyonepick.api.album.dto.PickInfoResponseDto;
+import soma.everyonepick.api.album.dto.PickInfoUserDto;
 import soma.everyonepick.api.album.entity.PickInfoUser;
 
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class PickInfoMapperTest {
                 .timeOut(36000L)
                 .userIds(userIds)
                 .build();
-        PickInfoResponseDto responseDto = pickInfoMapper.toDto(pickInfoUser);
+        PickInfoUserDto.PickInfoUserResponseDto responseDto = pickInfoMapper.toDto(pickInfoUser);
 
         assertEquals(2L, responseDto.getPickUserCnt());
         assertEquals(2L, responseDto.getUserCnt());
@@ -51,7 +51,7 @@ public class PickInfoMapperTest {
                 .userIds(userIds)
                 .build();
 
-        PickInfoResponseDto responseDto = pickInfoMapper.toDto(pickInfoUser);
+        PickInfoUserDto.PickInfoUserResponseDto responseDto = pickInfoMapper.toDto(pickInfoUser);
 
         assertEquals(0L, responseDto.getPickUserCnt());
         assertEquals(2L, responseDto.getUserCnt());

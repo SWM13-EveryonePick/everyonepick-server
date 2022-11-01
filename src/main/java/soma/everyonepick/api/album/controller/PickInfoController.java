@@ -12,10 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import soma.everyonepick.api.album.component.PickInfoMapper;
 import soma.everyonepick.api.album.dto.PhotoDto;
 import soma.everyonepick.api.album.dto.PhotoRequestDto;
-import soma.everyonepick.api.album.dto.PickInfoResponseDto;
+import soma.everyonepick.api.album.dto.PickInfoUserDto;
 import soma.everyonepick.api.album.entity.Photo;
 import soma.everyonepick.api.album.entity.Pick;
-import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.service.PhotoService;
 import soma.everyonepick.api.album.service.PickInfoService;
 import soma.everyonepick.api.album.service.PickService;
@@ -45,14 +44,14 @@ public class PickInfoController {
             @ApiResponse(responseCode = "200", description = "조회 성공")
     })
     @GetMapping(value = "")
-    public ResponseEntity<ApiResult<PickInfoResponseDto>> getPickInfo(
+    public ResponseEntity<ApiResult<PickInfoUserDto.PickInfoUserResponseDto>> getPickInfo(
             @Parameter(description = "사진선택 작업 id", required = true)
             @PathVariable Long pickId
     ) {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         pickInfoMapper.toDto(
-                                pickInfoService.getPickInfoByPick(
+                                pickInfoService.getPickInfoThrows(
                                         pickService.getPickById(pickId)
                                 )
                         )
@@ -65,7 +64,7 @@ public class PickInfoController {
             @ApiResponse(responseCode = "200", description = "등록 성공")
     })
     @PostMapping(value = "")
-    public ResponseEntity<ApiResult<PickInfoResponseDto>> postPickInfo(
+    public ResponseEntity<ApiResult<PickInfoUserDto.PickInfoUserResponseDto>> postPickInfo(
             @Parameter(hidden = true)
             @CurrentUser User user,
             @Parameter(description = "사진선택 작업 id", required = true)
@@ -88,6 +87,29 @@ public class PickInfoController {
                 ApiResult.ok(
                         pickInfoMapper.toDto(
                                 pickInfoService.createPickInfo(user, pick, photos)
+                        )
+                )
+        );
+    }
+
+    @Operation(description = "단체앨범 사진선택 유저 정보 등록")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "등록 성공")
+    })
+    @PatchMapping(value = "")
+    public ResponseEntity<ApiResult<PickInfoUserDto.PickInfoUserResponseDto>> postPickInfoUser(
+            @Parameter(description = "사진선택 작업 id", required = true)
+            @PathVariable Long pickId,
+            @Parameter(description = "단체앨범 사진선택 유저 정보 모델")
+            @RequestBody @Valid PickInfoUserDto pickInfoUserDto
+    ) {
+        Pick pick = pickService.getPickById(pickId);
+        Long timeOut = pickInfoUserDto.getTimeOut();
+
+        return ResponseEntity.ok(
+                ApiResult.ok(
+                        pickInfoMapper.toDto(
+                                pickInfoService.createPickInfoUser(pick, timeOut)
                         )
                 )
         );
