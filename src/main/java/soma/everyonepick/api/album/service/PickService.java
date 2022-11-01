@@ -3,17 +3,11 @@ package soma.everyonepick.api.album.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import soma.everyonepick.api.album.dto.PickDto;
-import soma.everyonepick.api.album.dto.PickRequestDto;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Pick;
-import soma.everyonepick.api.album.entity.PickInfoUser;
-import soma.everyonepick.api.album.repository.PickInfoUserRepository;
 import soma.everyonepick.api.album.repository.PickRepository;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_PICK;
@@ -22,7 +16,6 @@ import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_PICK;
 @RequiredArgsConstructor
 public class PickService {
     private final PickRepository pickRepository;
-    private final PickInfoUserRepository pickInfoUserRepository;
 
     /**
      * 단체앨범의 사진선택 작업 목록 조회

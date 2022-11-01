@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @Schema(description = "사진선택 정보 유저모델")
 public class PickInfoUserDto {
-    @Schema(description = "타임아웃 시간(분)")
+    @Schema(description = "타임아웃 시간(초)")
     @JsonProperty(index = 0)
     private Long timeOut;
 

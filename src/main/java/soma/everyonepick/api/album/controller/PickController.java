@@ -16,14 +16,19 @@ import soma.everyonepick.api.album.entity.Photo;
 import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.service.*;
+import soma.everyonepick.api.album.validator.PickPhotoValidator;
+import soma.everyonepick.api.album.validator.PickValidator;
 import soma.everyonepick.api.core.annotation.CurrentUser;
 import soma.everyonepick.api.core.dto.ApiResult;
+import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.user.entity.User;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static soma.everyonepick.api.core.message.ErrorMessage.WRONG_FACE_NUM;
 
 /**
  * 사진선택 관련 Endpoint
@@ -40,6 +45,8 @@ public class PickController {
     private final GroupAlbumService groupAlbumService;
     private final PickInfoService pickInfoService;
     private final PickMapper pickMapper;
+    private final PickValidator pickValidator;
+    private final PickPhotoValidator pickPhotoValidator;
 
     @Operation(description = "단체앨범 사진선택 작업 목록 조회")
     @ApiResponses({
@@ -54,7 +61,7 @@ public class PickController {
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
         List<Pick> picks = pickService.getPicksByGroupAlbum(groupAlbum).stream()
-                .filter(this::pickValidator)
+                .filter(pickValidator::pickValidator)
                 .collect(Collectors.toList());
 
         return ResponseEntity.ok(
@@ -96,11 +103,16 @@ public class PickController {
             @RequestBody @Valid PickRequestDto pickRequestDto
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-        Pick pick = pickService.createPick(groupAlbum);
 
         List<Photo> photos = pickRequestDto.getPhotos().stream()
                 .map(s -> photoService.getPhotosById(s.getId()))
                 .collect(Collectors.toList());
+
+        if (!pickPhotoValidator.pickPhotoValidator(groupAlbum, photos)) {
+            throw new BadRequestException(WRONG_FACE_NUM);
+        }
+
+        Pick pick = pickService.createPick(groupAlbum);
 
         return ResponseEntity.ok(
                 ApiResult.ok(
@@ -128,15 +140,5 @@ public class PickController {
             pickListDtos.add(pickListDto);
         }
         return pickListDtos;
-    }
-
-    private Boolean pickValidator(Pick pick) {
-        PickInfoUser pickInfoUser = pickInfoService.getPickInfo(pick).orElse(null);
-
-        if (pickInfoUser == null) {
-            pickService.deletePick(pick);
-            return false;
-        }
-        return true;
     }
 }

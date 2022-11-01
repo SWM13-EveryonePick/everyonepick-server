@@ -14,7 +14,7 @@ import lombok.*;
 public class FaceInfoRequestDto {
     @Schema(description = "사용자 아이디", hidden = true)
     @JsonProperty(index = 0)
-    private Long user_id;
+    private Long userId;
 
     @Schema(description = "얼굴 이미지 base64 인코딩 문자열", hidden = true)
     @JsonProperty(index = 1)

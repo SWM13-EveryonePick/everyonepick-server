@@ -3,27 +3,23 @@ package soma.everyonepick.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.core.exception.EveryonepickException;
 import soma.everyonepick.api.user.dto.FaceInfoDto;
 import soma.everyonepick.api.user.dto.FaceInfoRequestDto;
 import soma.everyonepick.api.user.entity.User;
-import soma.everyonepick.api.user.handler.RestTemplateResponseErrorHandler;
+import soma.everyonepick.api.core.handler.RestTemplateResponseErrorHandler;
 import soma.everyonepick.api.user.repository.UserRepository;
 
 import java.io.IOException;
 import java.util.*;
-
-import static soma.everyonepick.api.core.message.ErrorMessage.CAN_NOT_FIND_FACE;
-import static soma.everyonepick.api.core.message.ErrorMessage.MANY_FACE;
 
 @Slf4j
 @Service
@@ -50,6 +46,7 @@ public class FaceInfoUploadService {
         try {
             user.setIsRegistered(true);
             userRepository.saveAndFlush(user);
+            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
             return buildFaceInfoDto(objectMapper.readTree(response.getBody()));
         } catch (JsonProcessingException e) {
             throw new EveryonepickException("AI server JSON 응답 파싱 에러", e);
@@ -59,12 +56,13 @@ public class FaceInfoUploadService {
     private HttpEntity<String> buildRequest(Long userId, MultipartFile image) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
+        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
         try {
             String encodeBase64 = Base64.getEncoder().encodeToString(image.getBytes());
 
             FaceInfoRequestDto faceInfoRequestDto = FaceInfoRequestDto.builder()
-                    .user_id(userId)
+                    .userId(userId)
                     .image(encodeBase64)
                     .build();
 
