@@ -2,7 +2,7 @@ package soma.everyonepick.api.album.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import soma.everyonepick.api.album.dto.PickInfoResponseDto;
+import soma.everyonepick.api.album.dto.PickInfoUserDto;
 import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.PickInfoUser;
 import soma.everyonepick.api.album.service.PickService;
@@ -20,7 +20,7 @@ public class PickInfoMapper {
     private final PickService pickService;
     private final UserGroupAlbumService userGroupAlbumService;
 
-    public PickInfoResponseDto toDto(PickInfoUser pickInfoUser) {
+    public PickInfoUserDto.PickInfoUserResponseDto toDto(PickInfoUser pickInfoUser) {
         List<Long> userIds = pickInfoUser.getUserIds();
 
         if (userIds == null) {
@@ -32,7 +32,7 @@ public class PickInfoMapper {
         List<User> users = userGroupAlbumService.getMembers(pick.getGroupAlbum());
         Long timeOut = pickInfoUser.getTimeOut();
 
-        return PickInfoResponseDto
+        return PickInfoUserDto.PickInfoUserResponseDto
                 .builder()
                 .pickUserCnt((long) userIds.size())
                 .userCnt((long) users.size())

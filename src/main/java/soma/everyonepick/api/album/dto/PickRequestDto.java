@@ -15,11 +15,7 @@ import java.util.List;
 @NoArgsConstructor
 @Schema(description = "사진선택 작업 요청모델")
 public class PickRequestDto {
-    @Schema(description = "타임아웃 시간(분)")
-    @JsonProperty(index = 0)
-    private Long timeOut;
-
     @Schema(description = "사진선택 작업에 포함될 사진들")
-    @JsonProperty(index = 1)
+    @JsonProperty(index = 0)
     private List<PhotoDto> photos;
 }

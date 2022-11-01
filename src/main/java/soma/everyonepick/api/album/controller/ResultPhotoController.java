@@ -41,7 +41,7 @@ public class ResultPhotoController {
             @ApiResponse(responseCode = "200", description = "조회성공")
     })
     @GetMapping("")
-    public ResponseEntity<ApiResult<List<ResultPhotoDto>>> getResultPhotos(
+    public ResponseEntity<ApiResult<List<ResultPhotoDto.ResultPhotoResponseDto>>> getResultPhotos(
             @Parameter(description = "단체앨범 id", required = true)
             @PathVariable Long groupAlbumId
     ) {
