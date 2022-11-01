@@ -26,4 +26,5 @@ public class ErrorMessage {
     public static String TIME_IS_UP = "타임아웃이 종료되어 더이상 선택 할 수 없습니다.";
     public static String CAN_NOT_FIND_FACE = "얼굴을 검출에 실패했습니다.";
     public static String MANY_FACE = "여러 얼굴들이 검출되었습니다.";
+    public static String WRONG_FACE_NUM = "멤버들끼리 찍은 사진이 아닙니다.";
 }

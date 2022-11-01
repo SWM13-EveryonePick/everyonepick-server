@@ -101,7 +101,7 @@ public class PickInfoService {
      * 단체앨범의 사진선택 유저 정보 등록
      *
      * @param pick 사진선택 작업 엔티티
-     * @param timeOut 제한시간(분)
+     * @param timeOut 제한시간(초)
      * @return PickInfoUser 사진선택 현황
      */
     public PickInfoUser createPickInfoUser(Pick pick, Long timeOut) {
