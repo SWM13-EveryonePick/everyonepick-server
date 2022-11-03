@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.WRONG_FACE_NUM;
+import static soma.everyonepick.api.core.message.ErrorMessage.WRONG_PHOTO;
 
 /**
  * 사진선택 관련 Endpoint
@@ -103,10 +104,15 @@ public class PickController {
             @RequestBody @Valid PickRequestDto pickRequestDto
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-
         List<Photo> photos = pickRequestDto.getPhotos().stream()
                 .map(s -> photoService.getPhotosById(s.getId()))
                 .collect(Collectors.toList());
+
+        for (Photo photo : photos) {
+            if (photo.getGroupAlbum() != groupAlbum) {
+                throw new BadRequestException(WRONG_PHOTO);
+            }
+        }
 
         if (!pickPhotoValidator.pickPhotoValidator(groupAlbum, photos)) {
             throw new BadRequestException(WRONG_FACE_NUM);
@@ -117,7 +123,7 @@ public class PickController {
         return ResponseEntity.ok(
                 ApiResult.ok(
                         pickMapper.toDetailDto(
-                                pickPhotoService.registerPhotos(groupAlbum, pick, photos)
+                                pickPhotoService.registerPhotos(pick, photos)
                         )
                 )
         );

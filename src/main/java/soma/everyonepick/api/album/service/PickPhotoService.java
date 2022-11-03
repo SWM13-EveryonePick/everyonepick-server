@@ -38,19 +38,15 @@ public class PickPhotoService {
 
     /**
      * 단체앨범 사진선택 작업에 후보 사진들 등록
-     * @param groupAlbum 단체앨범 엔티티
      * @param pick 사진선택 작업 엔티티
      * @param photos 사진 리스트
      * @return Pick 사진선택 작업 엔티티
      */
     @Transactional
-    public Pick registerPhotos(GroupAlbum groupAlbum, Pick pick, List<Photo> photos) {
+    public Pick registerPhotos(Pick pick, List<Photo> photos) {
         List<PickPhoto> pickPhotos = new ArrayList<>();
 
         for (Photo photo : photos) {
-            if (photo.getGroupAlbum() != groupAlbum) {
-                throw new BadRequestException(WRONG_PHOTO);
-            }
 
             PickPhoto pickPhoto = PickPhoto
                     .builder()
