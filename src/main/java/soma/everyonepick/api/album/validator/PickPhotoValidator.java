@@ -47,6 +47,7 @@ public class PickPhotoValidator {
         ResponseEntity<String> response = restTemplate.postForEntity(aiServerUrl, requestEntity, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
+            log.info("Success: " + response.getBody());
             return true;
         }
         return false;
