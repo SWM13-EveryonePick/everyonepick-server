@@ -2,11 +2,14 @@ package soma.everyonepick.api.album.service;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import soma.everyonepick.api.album.component.FaceSwapRequestDtoFactory;
 import soma.everyonepick.api.album.entity.Photo;
 import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.PickInfoPhoto;
 import soma.everyonepick.api.album.entity.PickInfoUser;
+import soma.everyonepick.api.album.event.FaceSwapRequestEvent;
 import soma.everyonepick.api.album.repository.PickInfoPhotoRepository;
 import soma.everyonepick.api.album.repository.PickInfoUserRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
@@ -26,6 +29,8 @@ public class PickInfoService {
     private final PickInfoUserRepository pickInfoUserRepository;
     private final PickInfoPhotoRepository pickInfoPhotoRepository;
     private final UserGroupAlbumService userGroupAlbumService;
+    private final FaceSwapRequestDtoFactory faceSwapRequestDtoFactory;
+    private final ApplicationEventPublisher publisher;
 
     /**
      * 단체앨범의 사진선택 정보 조회
@@ -51,6 +56,7 @@ public class PickInfoService {
 
     /**
      * 단체앨범의 사진선택 정보 등록
+     * 등록 후 모두가 골랐다면 합성요청 이벤트 발생.
      *
      * @param user 선택을 한 유저 엔티티
      * @param pick 선택 작업 엔티티
@@ -91,7 +97,12 @@ public class PickInfoService {
         pickInfoUser.setUserIds(userIds);
 
         if (userGroupAlbumService.getMembers(pick.getGroupAlbum()).size() == userIds.size()) {
-            //:TODO 사진 합성 이벤트 발행
+
+            publisher.publishEvent(
+                    new FaceSwapRequestEvent(
+                            faceSwapRequestDtoFactory.buildFaceSwapRequestDto(pick)
+                    )
+            );
         }
 
         return pickInfoUserRepository.save(pickInfoUser);
