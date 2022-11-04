@@ -14,7 +14,7 @@ import soma.everyonepick.api.album.dto.FaceSwapRequestDto;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class Producer {
+public class FaceSwapProducer {
     @Value(value = "${spring.kafka.producer-topic}")
     private String topicName;
     private final KafkaTemplate<String, FaceSwapRequestDto> kafkaTemplate;

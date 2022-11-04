@@ -25,6 +25,7 @@ public class RestTemplateResponseErrorHandler extends DefaultResponseErrorHandle
         if (response.getStatusCode() == HttpStatus.BAD_REQUEST) {
             log.info("BAD_REQUEST: " + response.getBody());
             String message = objectMapper.readTree(response.getBody()).get("message").asText();
+
             if (message.equals("No face")) {
                 throw new BadRequestException(CAN_NOT_FIND_FACE);
             } else if (message.equals("Too many face")) {
