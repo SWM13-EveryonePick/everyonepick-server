@@ -2,6 +2,7 @@ package soma.everyonepick.api.album.service;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import soma.everyonepick.api.album.component.FaceSwapRequestDtoFactory;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.*;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PickInfoService {
@@ -96,6 +98,8 @@ public class PickInfoService {
         userIds.add(user.getId());
         pickInfoUser.setUserIds(userIds);
 
+        pickInfoUser = pickInfoUserRepository.save(pickInfoUser);
+
         if (userGroupAlbumService.getMembers(pick.getGroupAlbum()).size() == userIds.size()) {
 
             publisher.publishEvent(
@@ -103,9 +107,10 @@ public class PickInfoService {
                             faceSwapRequestDtoFactory.buildFaceSwapRequestDto(pick)
                     )
             );
+            log.info("Publish Event");
         }
 
-        return pickInfoUserRepository.save(pickInfoUser);
+        return pickInfoUser;
     }
 
     /**
