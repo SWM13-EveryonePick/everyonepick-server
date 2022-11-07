@@ -24,9 +24,4 @@ public class KafkaTopicConfig {
         configs.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapAddress);
         return new KafkaAdmin(configs);
     }
-
-//    @Bean
-//    public NewTopic topic() {
-//        return new NewTopic(topicName, 1, (short) 3);
-//    }
 }
