@@ -1,0 +1,54 @@
+spring:
+  datasource:
+    url: ${spring.datasource.url}
+    username: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  servlet:
+    multipart:
+      max-file-size: 10MB
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  jwt:
+    secret: ${spring.jwt.secret}
+    access-token-valid-milliseconds: 172800000 # 2일
+    refresh-token-valid-milliseconds: 5184000000  # 2달
+
+  server:
+    servlet:
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
+  redis:
+    host: ${spring.redis.host}
+    port: 6379
+  kafka:
+    bootstrap-servers: ${spring.kafka.bootstrap-servers}
+    producer-topic : everyonepick.faceswap.request
+    consumer-topic : everyonepick.faceswap.result
+
+
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql: error
+
+cloud:
+  aws:
+    credentials:
+      access_key: ${cloud.aws.credentials.access_key}
+      secret_key: ${cloud.aws.credentials.secret_key}
+    s3:
+      bucket: everyonepick-bucket
+    region:
+      static: ap-northeast-2
