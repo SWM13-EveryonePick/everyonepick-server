@@ -3,3 +3,4 @@
 /build/
 .DS_Store
 out
+/src/main/resources/application.yml
