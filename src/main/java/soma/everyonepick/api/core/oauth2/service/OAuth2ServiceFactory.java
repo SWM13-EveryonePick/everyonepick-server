@@ -7,6 +7,7 @@ import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.core.jwt.dto.Provider;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
  * {@link OAuth2Service} 팩토리 클래스
@@ -14,7 +15,7 @@ import javax.annotation.Resource;
 @Component
 @RequiredArgsConstructor
 public class OAuth2ServiceFactory {
-    //@Resource(name = "kakaoOAuth2Service")
+    @Resource(name = "kakaoOAuth2Service")
     private final OAuth2Service kakaoOAuth2Service;
 
     /**
@@ -23,8 +24,8 @@ public class OAuth2ServiceFactory {
      * @return {@link OAuth2Service} 구현 클래스
      * @throws BadRequestException provider명이 유효하지 않거나, 구현되어 있지 않으면 예외 throw.
      */
-    public OAuth2Service getInstance(Provider provider) throws BadRequestException {
-        if (provider == Provider.KAKAO) {
+    public OAuth2Service getInstance(String provider) {
+        if (provider.equals("KAKAO")) {
             return kakaoOAuth2Service;
         }
         throw new BadRequestException("잘못된 provider 입니다.");

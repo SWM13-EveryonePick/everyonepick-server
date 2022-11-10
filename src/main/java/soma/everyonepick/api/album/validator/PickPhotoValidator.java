@@ -44,6 +44,7 @@ public class PickPhotoValidator {
                 photos
         );
         restTemplate.setErrorHandler(responseErrorHandler);
+        log.info(requestEntity.getBody());
         ResponseEntity<String> response = restTemplate.postForEntity(aiServerUrl, requestEntity, String.class);
 
         if (response.getStatusCode() == HttpStatus.OK) {
@@ -56,7 +57,6 @@ public class PickPhotoValidator {
     private HttpEntity<String> buildRequest(Long userCnt, List<Photo> photos) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
         try {
             FaceValidateDto faceValidateDto = FaceValidateDto.builder()

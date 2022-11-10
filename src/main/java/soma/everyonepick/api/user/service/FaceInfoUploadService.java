@@ -3,7 +3,6 @@ package soma.everyonepick.api.user.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -46,7 +45,6 @@ public class FaceInfoUploadService {
         try {
             user.setIsRegistered(true);
             userRepository.saveAndFlush(user);
-            objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.LOWER_CAMEL_CASE);
             return buildFaceInfoDto(objectMapper.readTree(response.getBody()));
         } catch (JsonProcessingException e) {
             throw new EveryonepickException("AI server JSON 응답 파싱 에러", e);
@@ -56,7 +54,6 @@ public class FaceInfoUploadService {
     private HttpEntity<String> buildRequest(Long userId, MultipartFile image) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        objectMapper.setPropertyNamingStrategy(PropertyNamingStrategies.SNAKE_CASE);
 
         try {
             String encodeBase64 = Base64.getEncoder().encodeToString(image.getBytes());
