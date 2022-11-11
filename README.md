@@ -1,6 +1,6 @@
 ## 📸 모두의 Pick
 
-![Untitled__1__중간](/uploads/16ab3360e05712a261f792297cf9e3b8/Untitled__1__중간.png)
+![Untitled (1) 중간](https://user-images.githubusercontent.com/55652627/201305948-0da577e7-38e4-43b6-9fae-a4e64f919ad2.png)
 
 ### 프로젝트 소개 (SW Maestro 13th - 2022.05 ~ 2022.11)
 
