@@ -1,4 +1,31 @@
-# everyonepick-server
+## 📸 모두의 Pick
+
+![Untitled__1__중간](/uploads/16ab3360e05712a261f792297cf9e3b8/Untitled__1__중간.png)
+
+### 프로젝트 소개 (SW Maestro 13th - 2022.05 ~ 2022.11)
+
+**총 개발인원 : 3명**
+
+- AI : 1명, Android : 1명, Backend : 1명
+
+**제안배경**
+
+- 단체사진을 SNS 올리고자 할 때 완벽한 1장을 고르기 어렵다.
+- 단체사진을 그룹별로 관리하기 어렵다.
+- 단체사진을 찍을 때 포즈를 정하기 어렵다.
+
+**3가지 기능**
+
+- 여러 장의 단체사진들 중 각자 본인이 잘나온 사진을 선택하면 하나의 사진으로 만들어준 뒤 SNS에 공유할 수 있는 AI 얼굴합성 기능
+- 단체사진을 그룹별로 관리할 수 있는 단체 앨범 기능
+- 카메라에 인원 별 단체포즈 레이어를 표시해주는 단체 포즈레이어 기능
+
+**프로젝트 본인 역할 및 기술스택**
+
+- Backend 서버 개발 및 Infra 구축
+    - Spring Boot, Spring Data JPA, Spring Security, OAuth 2.0, JWT
+    - MySQL, Redis, Kafka, Docker, Jenkins
+    - AWS EC2, RDS, S3, CloudFront, ElastiCache, MSK, ECR
 
 ## git convention
 - 형식 : `[PICK-1] <업무명>: <작업 내용>`
