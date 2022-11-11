@@ -20,6 +20,7 @@ public class KafkaProducerFaceSwapConfig implements KafkaProducerConfig{
     private String bootstrapAddress;
 
     @Bean
+    @Override
     public ProducerFactory<String, FaceSwapRequestDto> producerFactory() {
         Map<String, Object> configProps = new HashMap<>();
         configProps.put(
@@ -35,6 +36,7 @@ public class KafkaProducerFaceSwapConfig implements KafkaProducerConfig{
     }
 
     @Bean
+    @Override
     public KafkaTemplate<String, FaceSwapRequestDto> kafkaTemplate() {
         return new KafkaTemplate<>(producerFactory());
     }
