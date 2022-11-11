@@ -27,6 +27,10 @@
     - MySQL, Redis, Kafka, Docker, Jenkins
     - AWS EC2, RDS, S3, CloudFront, ElastiCache, MSK, ECR
 
+API 문서 : http://ec2-3-38-142-213.ap-northeast-2.compute.amazonaws.com:8080/swagger-ui/index.html
+
+ERD : https://www.erdcloud.com/d/DWhuXgteoYBQHhKzm
+
 ## git convention
 - 형식 : `[PICK-1] <업무명>: <작업 내용>`
 
