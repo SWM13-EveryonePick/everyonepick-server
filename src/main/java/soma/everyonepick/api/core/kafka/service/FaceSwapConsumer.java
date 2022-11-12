@@ -35,12 +35,7 @@ public class FaceSwapConsumer {
      * @return ResultPhotoResponseDto
      */
     @KafkaListener(
-            topicPartitions = @TopicPartition(
-                    topic = "everyonepick.faceswap.result",
-                    partitionOffsets = {
-                            @PartitionOffset(partition = "0", initialOffset = "0")
-                    }
-                            ),
+            topics = "everyonepick.faceswap.request",
             groupId = "face-swap-1",
             containerFactory = "kafkaListenerContainerFactory"
     )
@@ -53,7 +48,7 @@ public class FaceSwapConsumer {
         Pick pick = pickRepository.findById(faceSwapResultDto.getPick_id())
                 .orElseThrow(()-> new ResourceNotFoundException(NOT_EXIST_PICK));
         String image = faceSwapResultDto.getFace_swap_result();
-        log.info("face_swap_result: " + image);
+
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] bytesImage = decoder.decode(image);
 
