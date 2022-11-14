@@ -35,9 +35,7 @@ public class FaceSwapConsumer {
      * @return ResultPhotoResponseDto
      */
     @KafkaListener(
-            topicPartitions = @TopicPartition(
-                    topic = "everyonepick.faceswap.result"
-            ),
+            topics = "everyonepick.faceswap.result",
             groupId = "face-swap-1",
             containerFactory = "kafkaListenerContainerFactory"
     )
