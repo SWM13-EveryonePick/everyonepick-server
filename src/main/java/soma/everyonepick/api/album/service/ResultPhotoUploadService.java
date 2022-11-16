@@ -31,7 +31,9 @@ public class ResultPhotoUploadService {
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
-    public static final String DASH = "/";
+    private static final String DASH = "/";
+    private static final String CDN_URL = "https://dosf6do8h1hli.cloudfront.net";
+    private static final String IMAGE_DIR = "images";
     private final FileNameGenerator fileNameGenerator;
     private final ResultPhotoRepository resultPhotoRepository;
 
@@ -46,7 +48,7 @@ public class ResultPhotoUploadService {
         GroupAlbum groupAlbum = pick.getGroupAlbum();
         final String ALBUM_ID = groupAlbum.getTitle() + '_' + groupAlbum.getId().toString();
         String generatedFileName = fileNameGenerator.generate(pick.getId().toString());
-        generatedFileName = ALBUM_ID + '_'+ "result" + DASH + generatedFileName;
+        generatedFileName = IMAGE_DIR + DASH + ALBUM_ID + '_'+ "result" + DASH + generatedFileName;
 
         String fullFilePath = PathUtil.replaceWindowPathToLinuxPath(generatedFileName);
         log.info("fullFilePath: " + fullFilePath);
@@ -55,10 +57,10 @@ public class ResultPhotoUploadService {
         objMeta.setContentType(Mimetypes.MIMETYPE_OCTET_STREAM);
         PutObjectResult putObjectResult = s3Client.putObject(new PutObjectRequest(
                 bucket, fullFilePath, image, objMeta
-        ).withCannedAcl(CannedAccessControlList.PublicRead));
+        ).withBucketName(bucket));
         log.info("ContentMd5: " + putObjectResult.getContentMd5());
 
-        String downloadableUrl = s3Client.getUrl(bucket, fullFilePath).toString();
+        String downloadableUrl = CDN_URL + DASH + fullFilePath;
         log.info("URL: " + downloadableUrl);
 
         return resultPhotoRepository.saveAndFlush(
