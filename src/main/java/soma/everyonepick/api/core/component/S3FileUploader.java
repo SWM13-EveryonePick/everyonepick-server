@@ -39,7 +39,7 @@ public class S3FileUploader implements FileUploader {
 
         s3Client.putObject(new PutObjectRequest(
                 bucket, fullFilePath, s3ObjectUploadDto.getByteArrayInputStream(), s3ObjectUploadDto.getObjectMetadata()
-        ).withCannedAcl(CannedAccessControlList.PublicRead));
+        ).withBucketName(bucket));
 
         return s3Client.getUrl(bucket, fullFilePath).toString();
     }
