@@ -61,7 +61,7 @@ public class ResultPhotoUploadService {
 
         log.info("ContentMd5: " + putObjectResult.getContentMd5());
 
-        String downloadableUrl = String.valueOf(s3Client.getUrl(bucket, fullFilePath));
+        String downloadableUrl = s3Client.getUrl(bucket, fullFilePath).toString();
         log.info("URL: " + downloadableUrl);
 
         String cdnDownloadableUrl = downloadableUrl.replace(BUCKET_URL, CDN_URL);
