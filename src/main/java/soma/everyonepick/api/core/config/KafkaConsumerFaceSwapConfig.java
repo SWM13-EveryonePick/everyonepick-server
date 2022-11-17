@@ -27,16 +27,24 @@ public class KafkaConsumerFaceSwapConfig implements KafkaConsumerConfig{
         Map<String, Object> props = new HashMap<>();
         props.put(
                 ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG,
-                bootstrapAddress);
+                bootstrapAddress
+        );
         props.put(
                 ConsumerConfig.GROUP_ID_CONFIG,
-                "face-swap-1");
+                "face-swap-1"
+        );
         props.put(
                 ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class);
+                StringDeserializer.class
+        );
         props.put(
                 ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG,
-                StringDeserializer.class);
+                StringDeserializer.class
+        );
+        props.put(
+                ConsumerConfig.MAX_PARTITION_FETCH_BYTES_CONFIG,
+                10485760
+        );
         return new DefaultKafkaConsumerFactory<>(
                 props,
                 new StringDeserializer(),
