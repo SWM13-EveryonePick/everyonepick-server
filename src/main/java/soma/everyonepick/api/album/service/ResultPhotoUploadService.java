@@ -2,7 +2,6 @@ package soma.everyonepick.api.album.service;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.internal.Mimetypes;
-import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectResult;
@@ -11,13 +10,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
+
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.ResultPhoto;
 import soma.everyonepick.api.album.repository.ResultPhotoRepository;
 import soma.everyonepick.api.core.component.FileNameGenerator;
-import soma.everyonepick.api.core.component.FileUploader;
 import soma.everyonepick.api.core.util.PathUtil;
 
 import java.io.ByteArrayInputStream;
@@ -32,7 +30,8 @@ public class ResultPhotoUploadService {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
     private static final String DASH = "/";
-    private static final String CDN_URL = "https://dosf6do8h1hli.cloudfront.net";
+    private static final String BUCKET_URL = "everyonepick-bucket.s3.ap-northeast-2.amazonaws.com";
+    private static final String CDN_URL = "dosf6do8h1hli.cloudfront.net";
     private static final String IMAGE_DIR = "images";
     private final FileNameGenerator fileNameGenerator;
     private final ResultPhotoRepository resultPhotoRepository;
@@ -55,18 +54,22 @@ public class ResultPhotoUploadService {
 
         ObjectMetadata objMeta = new ObjectMetadata();
         objMeta.setContentType(Mimetypes.MIMETYPE_OCTET_STREAM);
+
         PutObjectResult putObjectResult = s3Client.putObject(new PutObjectRequest(
                 bucket, fullFilePath, image, objMeta
         ).withBucketName(bucket));
+
         log.info("ContentMd5: " + putObjectResult.getContentMd5());
 
-        String downloadableUrl = CDN_URL + DASH + fullFilePath;
+        String downloadableUrl = String.valueOf(s3Client.getUrl(bucket, fullFilePath));
         log.info("URL: " + downloadableUrl);
+
+        String cdnDownloadableUrl = downloadableUrl.replace(BUCKET_URL, CDN_URL);
 
         return resultPhotoRepository.saveAndFlush(
                 ResultPhoto.builder()
                         .groupAlbum(groupAlbum)
-                        .resultPhotoUrl(downloadableUrl)
+                        .resultPhotoUrl(cdnDownloadableUrl)
                         .build()
         );
     }
