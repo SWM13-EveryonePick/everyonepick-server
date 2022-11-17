@@ -22,7 +22,8 @@ import static soma.everyonepick.api.core.message.ErrorMessage.NOT_MEMBER;
 @RequiredArgsConstructor
 public class PhotoUploadService {
     private static final String DASH = "/";
-    private static final String CDN_URL = "https://dosf6do8h1hli.cloudfront.net";
+    private static final String BUCKET_URL = "everyonepick-bucket.s3.ap-northeast-2.amazonaws.com";
+    private static final String CDN_URL = "dosf6do8h1hli.cloudfront.net";
     private static final String IMAGE_DIR = "images";
 
     private final FileNameGenerator fileNameGenerator;
@@ -54,10 +55,10 @@ public class PhotoUploadService {
             generatedFileName = IMAGE_DIR + DASH + ALBUM_ID + DASH + generatedFileName;
             String downloadableUrl = fileUploader.uploadMultiPartFile(imageFile, generatedFileName);
 
-            String cdn_downloadableUrl = CDN_URL + DASH + generatedFileName;
+            String cdnDownloadableUrl = downloadableUrl.replace(BUCKET_URL, CDN_URL);
 
             photos.add(Photo.builder()
-                    .photoUrl(cdn_downloadableUrl)
+                    .photoUrl(cdnDownloadableUrl)
                     .groupAlbum(groupAlbum)
                     .build());
         }
