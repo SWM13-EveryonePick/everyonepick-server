@@ -13,29 +13,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+@Table(name = "device_token")
+public class DeviceToken {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
     @Column
-    private String nickname;
-
-    @Column(unique = true, nullable = false)
-    private String clientId;
-
-    @Column
-    private String thumbnailImageUrl;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean isPushActive = true;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean isRegistered = false;
+    private String fcmDeviceToken;
 
     @Column(nullable = false)
     @Builder.Default
@@ -46,4 +32,8 @@ public class User {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @OneToOne
+    @JoinColumn(name = "user_id")
+    private User user;
 }
