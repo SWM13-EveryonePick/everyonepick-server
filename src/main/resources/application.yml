@@ -54,7 +54,6 @@ cloud:
       static: ap-northeast-2
 
 fcm:
-  google_application_credentials_path: ${fcm.google_application_credentials_path}
   type: ${fcm.type}
   project_id: ${fcm.project_id}
   private_key_id: ${fcm.private_key_id}
