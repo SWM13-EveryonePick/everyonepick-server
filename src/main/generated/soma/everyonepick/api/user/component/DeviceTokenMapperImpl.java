@@ -7,7 +7,7 @@ import soma.everyonepick.api.user.entity.DeviceToken;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-11-18T21:54:37+0900",
+    date = "2022-11-19T19:59:04+0900",
     comments = "version: 1.5.1.Final, compiler: javac, environment: Java 17.0.3 (Amazon.com Inc.)"
 )
 @Component

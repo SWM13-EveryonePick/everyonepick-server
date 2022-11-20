@@ -52,3 +52,16 @@ cloud:
       bucket: everyonepick-bucket
     region:
       static: ap-northeast-2
+
+fcm:
+  google_application_credentials_path: ${fcm.google_application_credentials_path}
+  type: ${fcm.type}
+  project_id: ${fcm.project_id}
+  private_key_id: ${fcm.private_key_id}
+  private_key: ${fcm.private_key}
+  client_email: ${fcm.client_email}
+  client_id: ${fcm.client_id}
+  auth_uri: ${fcm.auth_uri}
+  token_uri: ${fcm.token_uri}
+  auth_provider_x509_cert_url: ${fcm.auth_provider_x509_cert_url}
+  client_x509_cert_url: ${fcm.client_x509_cert_url}

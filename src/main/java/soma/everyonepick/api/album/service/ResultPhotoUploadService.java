@@ -8,14 +8,17 @@ import com.amazonaws.services.s3.model.PutObjectResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import soma.everyonepick.api.album.component.PushMessageFactory;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.ResultPhoto;
 import soma.everyonepick.api.album.repository.ResultPhotoRepository;
 import soma.everyonepick.api.core.component.FileNameGenerator;
+import soma.everyonepick.api.core.fcm.event.PushEvent;
 import soma.everyonepick.api.core.util.PathUtil;
 
 import java.io.ByteArrayInputStream;
@@ -35,9 +38,12 @@ public class ResultPhotoUploadService {
     private static final String IMAGE_DIR = "images";
     private final FileNameGenerator fileNameGenerator;
     private final ResultPhotoRepository resultPhotoRepository;
+    private final ApplicationEventPublisher publisher;
+    private final PushMessageFactory pushMessageFactory;
+    private final UserGroupAlbumService userGroupAlbumService;
 
     /**
-     * 합성결과 사진을 S3에 업로드하고 ResultPhoto를 저장.
+     * 합성결과 사진을 S3에 업로드하고 ResultPhoto를 저장한 뒤 푸시알림을 전송한다.
      * @param image 합성결과 사진
      * @param pick 사진선택 작업 엔티티
      * @return ResultPhoto 합성결과 엔티티
@@ -66,11 +72,24 @@ public class ResultPhotoUploadService {
 
         String cdnDownloadableUrl = downloadableUrl.replace(BUCKET_URL, CDN_URL);
 
-        return resultPhotoRepository.saveAndFlush(
+        ResultPhoto resultPhoto = resultPhotoRepository.saveAndFlush(
                 ResultPhoto.builder()
                         .groupAlbum(groupAlbum)
                         .resultPhotoUrl(cdnDownloadableUrl)
                         .build()
         );
+
+        publisher.publishEvent(
+                new PushEvent(
+                    pushMessageFactory.buildPushMessage(
+                            userGroupAlbumService.getMembers(groupAlbum),
+                            groupAlbum,
+                            "모두의 PICK",
+                            groupAlbum.getTitle() + "의 합성이 완료되었습니다."
+                    )
+                )
+        );
+
+        return resultPhoto;
     }
 }

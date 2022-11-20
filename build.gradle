@@ -36,6 +36,7 @@ dependencies {
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.4'
 	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
+	implementation 'com.google.firebase:firebase-admin:9.1.1'
 
 	compileOnly 'org.projectlombok:lombok'
 

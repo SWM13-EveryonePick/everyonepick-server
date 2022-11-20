@@ -3,3 +3,4 @@
 /build/
 .DS_Store
 out
+/src/main/resources/firebase/secret.json
