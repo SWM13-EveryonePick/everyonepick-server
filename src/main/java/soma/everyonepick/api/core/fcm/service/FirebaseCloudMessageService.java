@@ -108,8 +108,8 @@ public class FirebaseCloudMessageService {
                 .putData("groupAlbumId", groupAlbum.getId().toString())
                 .setNotification(
                         Notification.builder()
-                                .setTitle("모두의 PICK")
-                                .setBody(groupAlbum.getTitle() + "에 초대되었습니다.")
+                                .setTitle(pushMessage.getMessageData().getTitle())
+                                .setBody(pushMessage.getMessageData().getContent())
                                 .build()
                 )
                 .addAllTokens(registrationTokens)

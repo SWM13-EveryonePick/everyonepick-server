@@ -1,4 +1,4 @@
-package soma.everyonepick.api.album.event;
+package soma.everyonepick.api.core.fcm.event;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,13 +12,13 @@ import soma.everyonepick.api.core.fcm.service.FirebaseCloudMessageService;
 @Component
 @RequiredArgsConstructor
 @EnableAsync
-public class GroupAlbumInviteEventListener {
+public class PushEventListener {
     private final FirebaseCloudMessageService firebaseCloudMessageService;
 
     @Async
     @EventListener
-    public void sendPush(GroupAlbumInviteEvent groupAlbumInviteEvent) {
-        log.info("Listened GroupAlbumInviteEvent");
-        firebaseCloudMessageService.sendPushToGroup(groupAlbumInviteEvent.getPushMessage());
+    public void sendPush(PushEvent pushEvent) {
+        log.info("Listened PushEvent");
+        firebaseCloudMessageService.sendPushToGroup(pushEvent.getPushMessage());
     }
 }

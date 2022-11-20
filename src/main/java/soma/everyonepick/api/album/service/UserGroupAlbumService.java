@@ -4,18 +4,17 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import soma.everyonepick.api.album.component.PushMessageFactory;
 import soma.everyonepick.api.album.entity.GroupAlbum;
 import soma.everyonepick.api.album.entity.UserGroupAlbum;
-import soma.everyonepick.api.album.event.GroupAlbumInviteEvent;
 import soma.everyonepick.api.album.repository.GroupAlbumRepository;
 import soma.everyonepick.api.album.repository.UserGroupAlbumRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
-import soma.everyonepick.api.core.fcm.dto.PushMessage;
+import soma.everyonepick.api.core.fcm.event.PushEvent;
 import soma.everyonepick.api.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static soma.everyonepick.api.core.message.ErrorMessage.*;
@@ -26,6 +25,7 @@ public class UserGroupAlbumService {
     private final UserGroupAlbumRepository userGroupAlbumRepository;
     private final GroupAlbumRepository groupAlbumRepository;
     private final ApplicationEventPublisher publisher;
+    private final PushMessageFactory pushMessageFactory;
 
     /**
      * 단체앨범에 속한 맴버들을 groupAlbum로 조회
@@ -100,16 +100,18 @@ public class UserGroupAlbumService {
         }
         userGroupAlbumRepository.saveAllAndFlush(userGroupAlbums);
 
+        users = users.stream()
+                .filter(s -> !s.getId().equals(user.getId()))
+                .collect(Collectors.toList());
+
         publisher.publishEvent(
-                new GroupAlbumInviteEvent(
-                        PushMessage.builder()
-                                .users(
-                                        users.stream()
-                                                .filter(s -> !s.getId().equals(user.getId()))
-                                                .collect(Collectors.toList())
-                                )
-                                .groupAlbum(groupAlbum)
-                                .build()
+                new PushEvent(
+                        pushMessageFactory.buildPushMessage(
+                                users,
+                                groupAlbum,
+                                "모두의 PICK",
+                                groupAlbum.getTitle() + "에 초대되었습니다."
+                        )
                 )
         );
         return groupAlbum;
