@@ -27,8 +27,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class FirebaseCloudMessageService {
-    @Value(value = "${fcm.google_application_credentials_path}")
-    private String path;
     @Value(value = "${fcm.type}")
     private String type;
     @Value(value = "${fcm.project_id}")
@@ -71,11 +69,10 @@ public class FirebaseCloudMessageService {
         map.put("client_x509_cert_url", client_x509_cert_url);
 
         try {
-            File file = new File(path);
-            objectMapper.writeValue(file, map);
+            String json = objectMapper.writeValueAsString(map);
 
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(new FileInputStream(file)))
+                    .setCredentials(GoogleCredentials.fromStream(new ByteArrayInputStream(json.getBytes())))
                     .build();
 
             if (FirebaseApp.getApps().isEmpty()) {
