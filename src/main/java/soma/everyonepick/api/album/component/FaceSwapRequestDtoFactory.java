@@ -68,11 +68,11 @@ public class FaceSwapRequestDtoFactory {
         pickInfoUser.ifPresent(pickInfoUserRepository::delete);
 
         pick.setIsActive(false);
-        pickRepository.save(pick);
+        pickRepository.saveAndFlush(pick);
 
-        List<PickPhoto> pickPhotos = pickPhotoRepository.findAllByPickAndIsActive(pick, true);
-        pickPhotos.forEach(pickPhoto -> pickPhoto.setIsActive(false));
-        pickPhotoRepository.saveAllAndFlush(pickPhotos);
+//        List<PickPhoto> pickPhotos = pickPhotoRepository.findAllByPickAndIsActive(pick, true);
+//        pickPhotos.forEach(pickPhoto -> pickPhoto.setIsActive(false));
+//        pickPhotoRepository.saveAllAndFlush(pickPhotos);
 
         return FaceSwapRequestDto.builder()
                 .pick(pickMapper.toDetailDto(pick))
