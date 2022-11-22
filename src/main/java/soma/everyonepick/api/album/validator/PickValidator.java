@@ -19,6 +19,7 @@ public class PickValidator {
      * @param pick
      * @return Boolean
      */
+    @Deprecated
     public Boolean pickValidator(Pick pick) {
         PickInfoUser pickInfoUser = pickInfoService.getPickInfo(pick).orElse(null);
 
