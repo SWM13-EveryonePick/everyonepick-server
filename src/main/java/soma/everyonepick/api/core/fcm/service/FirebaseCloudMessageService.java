@@ -98,6 +98,7 @@ public class FirebaseCloudMessageService {
         GroupAlbum groupAlbum = pushMessage.getGroupAlbum();
 
         List<String> registrationTokens = users.stream()
+                .filter(User::getIsPushActive)
                 .map(s-> deviceTokenService.getDeviceToken(s).getFcmDeviceToken())
                 .collect(Collectors.toList());
 
