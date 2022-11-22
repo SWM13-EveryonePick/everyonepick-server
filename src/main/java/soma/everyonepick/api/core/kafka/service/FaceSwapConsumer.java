@@ -26,7 +26,7 @@ import static soma.everyonepick.api.core.message.ErrorMessage.NOT_EXIST_PICK;
 @RequiredArgsConstructor
 public class FaceSwapConsumer {
     private final ResultPhotoUploadService resultPhotoUploadService;
-    private final PickRepository pickRepository;
+    private final PickService pickService;
     private final ResultPhotoMapper resultPhotoMapper;
 
     /**
@@ -45,8 +45,7 @@ public class FaceSwapConsumer {
     }
 
     private ResultPhotoDto.ResultPhotoResponseDto buildResultPhotoDto(FaceSwapResultDto faceSwapResultDto) {
-        Pick pick = pickRepository.findById(faceSwapResultDto.getPick_id())
-                .orElseThrow(()-> new ResourceNotFoundException(NOT_EXIST_PICK));
+        Pick pick = pickService.getTempPickById(faceSwapResultDto.getPick_id());
         String image = faceSwapResultDto.getFace_swap_result();
 
         Base64.Decoder decoder = Base64.getDecoder();

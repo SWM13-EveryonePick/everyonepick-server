@@ -6,13 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import soma.everyonepick.api.album.component.FaceSwapRequestDtoFactory;
-import soma.everyonepick.api.album.entity.Photo;
-import soma.everyonepick.api.album.entity.Pick;
-import soma.everyonepick.api.album.entity.PickInfoPhoto;
-import soma.everyonepick.api.album.entity.PickInfoUser;
+import soma.everyonepick.api.album.entity.*;
 import soma.everyonepick.api.album.event.FaceSwapRequestEvent;
 import soma.everyonepick.api.album.repository.PickInfoPhotoRepository;
 import soma.everyonepick.api.album.repository.PickInfoUserRepository;
+import soma.everyonepick.api.album.repository.PickPhotoRepository;
+import soma.everyonepick.api.album.repository.PickRepository;
 import soma.everyonepick.api.core.exception.BadRequestException;
 import soma.everyonepick.api.core.exception.ResourceNotFoundException;
 import soma.everyonepick.api.user.entity.User;
@@ -30,6 +29,8 @@ import static soma.everyonepick.api.core.message.ErrorMessage.*;
 public class PickInfoService {
     private final PickInfoUserRepository pickInfoUserRepository;
     private final PickInfoPhotoRepository pickInfoPhotoRepository;
+    private final PickRepository pickRepository;
+    private final PickPhotoRepository pickPhotoRepository;
     private final UserGroupAlbumService userGroupAlbumService;
     private final FaceSwapRequestDtoFactory faceSwapRequestDtoFactory;
     private final ApplicationEventPublisher publisher;
@@ -126,6 +127,13 @@ public class PickInfoService {
                 .pickId(pick.getId().toString())
                 .timeOut(timeOut)
                 .build();
+
+        pick.setIsActive(true);
+        pickRepository.save(pick);
+
+        List<PickPhoto> pickPhotos = pickPhotoRepository.findAllByPickAndIsActive(pick, false);
+        pickPhotos.forEach(pickPhoto -> pickPhoto.setIsActive(true));
+        pickPhotoRepository.saveAllAndFlush(pickPhotos);
 
         return pickInfoUserRepository.save(pickInfoUser);
     }

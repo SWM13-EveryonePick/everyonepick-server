@@ -43,13 +43,14 @@ public class PickPhotoService {
      * @return Pick 사진선택 작업 엔티티
      */
     @Transactional
-    public Pick registerPhotos(Pick pick, List<Photo> photos) {
+    public Pick registerTempPhotos(Pick pick, List<Photo> photos) {
         List<PickPhoto> pickPhotos = new ArrayList<>();
 
         for (Photo photo : photos) {
 
             PickPhoto pickPhoto = PickPhoto
                     .builder()
+                    .isActive(false)
                     .pick(pick)
                     .photo(photo)
                     .build();

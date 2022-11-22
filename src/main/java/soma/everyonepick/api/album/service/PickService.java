@@ -42,16 +42,30 @@ public class PickService {
     }
 
     /**
+     * 단체앨범의 비활성화 된 사진선택 작업 상세 조회
+     *
+     * @param pickId 사진선택 작업 아이디
+     * @return Pick 사진선택 작업
+     * @throws ResourceNotFoundException
+     */
+    @Transactional(readOnly = true)
+    public Pick getTempPickById(Long pickId) {
+        return pickRepository.findByIdAndIsActive(pickId, false)
+                .orElseThrow(() -> new ResourceNotFoundException(NOT_EXIST_PICK));
+    }
+
+    /**
      * 단체앨범의 사진선택 작업 등록
      *
      * @param groupAlbum 단체앨범 엔티티
      * @return Pick 사진선택 작업 엔티티
      */
     @Transactional
-    public Pick createPick(GroupAlbum groupAlbum) {
+    public Pick createTempPick(GroupAlbum groupAlbum) {
         Pick pick = Pick
                 .builder()
                 .groupAlbum(groupAlbum)
+                .isActive(false)
                 .build();
         pick = pickRepository.saveAndFlush(pick);
 

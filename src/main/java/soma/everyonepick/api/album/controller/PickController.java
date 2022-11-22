@@ -46,7 +46,6 @@ public class PickController {
     private final GroupAlbumService groupAlbumService;
     private final PickInfoService pickInfoService;
     private final PickMapper pickMapper;
-    private final PickValidator pickValidator;
     private final PickPhotoValidator pickPhotoValidator;
 
     @Operation(description = "단체앨범 사진선택 작업 목록 조회")
@@ -61,9 +60,7 @@ public class PickController {
             @PathVariable Long groupAlbumId
     ) {
         GroupAlbum groupAlbum = groupAlbumService.getGroupAlbumById(groupAlbumId);
-        List<Pick> picks = pickService.getPicksByGroupAlbum(groupAlbum).stream()
-                .filter(pickValidator::pickValidator)
-                .collect(Collectors.toList());
+        List<Pick> picks = pickService.getPicksByGroupAlbum(groupAlbum);
 
         return ResponseEntity.ok(
                 ApiResult.ok(
@@ -118,12 +115,12 @@ public class PickController {
             throw new BadRequestException(WRONG_FACE_NUM);
         }
 
-        Pick pick = pickService.createPick(groupAlbum);
+        Pick pick = pickService.createTempPick(groupAlbum);
 
         return ResponseEntity.ok(
                 ApiResult.ok(
                         pickMapper.toDetailDto(
-                                pickPhotoService.registerPhotos(pick, photos)
+                                pickPhotoService.registerTempPhotos(pick, photos)
                         )
                 )
         );

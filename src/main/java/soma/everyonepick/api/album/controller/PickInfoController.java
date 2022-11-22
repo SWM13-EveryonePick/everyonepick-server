@@ -103,7 +103,7 @@ public class PickInfoController {
             @Parameter(description = "단체앨범 사진선택 유저 정보 모델")
             @RequestBody @Valid PickInfoUserDto pickInfoUserDto
     ) {
-        Pick pick = pickService.getPickById(pickId);
+        Pick pick = pickService.getTempPickById(pickId);
         Long timeOut = pickInfoUserDto.getTimeOut();
 
         return ResponseEntity.ok(
