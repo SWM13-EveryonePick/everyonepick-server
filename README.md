@@ -31,7 +31,7 @@ API 문서 : https://www.everyonepick.com/swagger-ui/index.html
 
 ERD : https://www.erdcloud.com/d/DWhuXgteoYBQHhKzm
 
-
+<img width="1466" alt="everyonepick_system_architecture" src="https://user-images.githubusercontent.com/55652627/204117083-7f7f0bac-dec8-49c1-9279-c46559151b61.png">
 ## git convention
 - 형식 : `[PICK-1] <업무명>: <작업 내용>`
 
