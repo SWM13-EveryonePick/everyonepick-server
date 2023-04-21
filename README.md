@@ -27,6 +27,7 @@
     - MySQL, Redis, Kafka, Docker, Jenkins
     - AWS EC2, RDS, S3, CloudFront, ElastiCache, MSK, ECR
 
+API 문서 : https://www.everyonepick.net/swagger-ui/index.html
 ERD : https://www.erdcloud.com/d/DWhuXgteoYBQHhKzm
 
 ## System Architecture
