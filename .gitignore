@@ -4,3 +4,4 @@
 .DS_Store
 out
 /src/main/resources/firebase/secret.json
+/src/main/resources/application-local.yml
