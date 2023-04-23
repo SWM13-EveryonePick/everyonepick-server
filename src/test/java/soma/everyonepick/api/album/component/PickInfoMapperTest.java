@@ -1,61 +1,89 @@
 package soma.everyonepick.api.album.component;
 
-
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import soma.everyonepick.api.album.dto.PickInfoUserDto;
+import soma.everyonepick.api.album.entity.GroupAlbum;
+import soma.everyonepick.api.album.entity.Pick;
 import soma.everyonepick.api.album.entity.PickInfoUser;
+import soma.everyonepick.api.album.repository.PickRepository;
+import soma.everyonepick.api.album.service.UserGroupAlbumService;
+import soma.everyonepick.api.user.entity.User;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.*;
 
-
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class PickInfoMapperTest {
 
-    @Autowired
+    @Mock
+    private PickRepository pickRepository;
+
+    @Mock
+    private UserGroupAlbumService userGroupAlbumService;
+
+    @InjectMocks
     private PickInfoMapper pickInfoMapper;
 
-    //@Test
+    private PickInfoUser pickInfoUser;
+    private Pick pick;
+    private GroupAlbum groupAlbum;
+    private List<User> users;
+
+    @BeforeEach
+    public void setUp() {
+        pickInfoUser = new PickInfoUser();
+        pickInfoUser.setPickId("1");
+        pickInfoUser.setUserIds(Arrays.asList(1L, 2L));
+        pickInfoUser.setTimeOut(1000L);
+
+        groupAlbum = new GroupAlbum();
+        pick = new Pick();
+        pick.setId(1L);
+        pick.setGroupAlbum(groupAlbum);
+    }
+
+    @Test
     @DisplayName("toDto_변환_테스트")
-    void toDto() {
-        List<Long> userIds = new ArrayList<>();
-        userIds.add(1L);
-        userIds.add(2L);
+    public void testToDto() {
+        users = Arrays.asList(new User(), new User(), new User());
+        when(pickRepository.findById(pick.getId())).thenReturn(java.util.Optional.of(pick));
+        when(userGroupAlbumService.getMembers(pick.getGroupAlbum())).thenReturn(users);
 
-        PickInfoUser pickInfoUser = PickInfoUser.builder()
-                .pickId("1")
-                .timeOut(36000L)
-                .userIds(userIds)
-                .build();
         PickInfoUserDto.PickInfoUserResponseDto responseDto = pickInfoMapper.toDto(pickInfoUser);
 
-        assertEquals(2L, responseDto.getPickUserCnt());
-        assertEquals(2L, responseDto.getUserCnt());
+        assertEquals(pickInfoUser.getUserIds().size(), responseDto.getPickUserCnt());
+        assertEquals(users.size(), responseDto.getUserCnt());
+        assertEquals(pickInfoUser.getTimeOut(), responseDto.getTimeOut());
+
+        verify(pickRepository).findById(pick.getId());
+        verify(userGroupAlbumService).getMembers(pick.getGroupAlbum());
     }
 
-    //@Test
+    @Test
     @DisplayName("toDto_변환_테스트 - userIds 요소가 없을 때")
-    void toDto_userIds_null() {
-
-        List<Long> userIds = new ArrayList<>();
-
-        PickInfoUser pickInfoUser = PickInfoUser.builder()
-                .pickId("1")
-                .timeOut(3600L)
-                .userIds(userIds)
-                .build();
+    public void testToDtoWithNoUsers() {
+        users = new ArrayList<>();
+        when(pickRepository.findById(pick.getId())).thenReturn(java.util.Optional.of(pick));
+        when(userGroupAlbumService.getMembers(pick.getGroupAlbum())).thenReturn(users);
 
         PickInfoUserDto.PickInfoUserResponseDto responseDto = pickInfoMapper.toDto(pickInfoUser);
 
-        assertEquals(0L, responseDto.getPickUserCnt());
-        assertEquals(2L, responseDto.getUserCnt());
+        assertEquals(pickInfoUser.getUserIds().size(), responseDto.getPickUserCnt());
+        assertEquals(users.size(), responseDto.getUserCnt());
+        assertEquals(pickInfoUser.getTimeOut(), responseDto.getTimeOut());
+
+        verify(pickRepository).findById(pick.getId());
+        verify(userGroupAlbumService).getMembers(pick.getGroupAlbum());
     }
-
-
 }
+
