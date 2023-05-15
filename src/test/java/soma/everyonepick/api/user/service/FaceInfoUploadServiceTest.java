@@ -52,7 +52,7 @@ public class FaceInfoUploadServiceTest {
     }
 
     @Test
-    public void testUploadFaceInfoSuccess() throws JsonProcessingException {
+    public void uploadFaceInfoSuccessTest() throws JsonProcessingException {
         String responseBody = "{\"data\":{\"user_id\":1,\"face_embedding\":[0.1,0.2,0.3]}}";
         when(restTemplate.postForEntity(any(String.class), any(HttpEntity.class), any(Class.class))).thenReturn(new ResponseEntity<>(responseBody, HttpStatus.OK));
         when(userRepository.saveAndFlush(user)).thenReturn(user);
@@ -66,7 +66,7 @@ public class FaceInfoUploadServiceTest {
     }
 
     @Test
-    public void testUploadFaceInfoFailure() throws JsonProcessingException {
+    public void uploadFaceInfoFailureTest() throws JsonProcessingException {
         when(objectMapper.writeValueAsString(any())).thenThrow(new EveryonepickException("AI server JSON 응답 파싱 에러"));
         EveryonepickException exception = assertThrows(EveryonepickException.class, () -> faceInfoUploadService.uploadFaceInfo(user, image));
         assertEquals("AI server JSON 응답 파싱 에러", exception.getMessage());
