@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.0'
 	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
+	id 'jacoco'
 }
 
 group = 'soma'
@@ -35,8 +36,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'org.springframework.kafka:spring-kafka'
 	implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:3.1.4'
-	implementation 'org.springframework.cloud:spring-cloud-starter-aws-secrets-manager-config:2.2.6.RELEASE'
 	implementation 'com.google.firebase:firebase-admin:9.1.1'
+	implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
+	implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 
 	compileOnly 'org.projectlombok:lombok'
 
@@ -55,3 +57,23 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+jacoco {
+	toolVersion = "0.8.8"
+}
+
+test {
+	finalizedBy 'jacocoTestReport' // 테스트가 완료된 후 JaCoCo 보고서 생성
+	jacoco {
+		enabled = true
+		destinationFile = file("$buildDir/jacoco/test.exec") // 결과 파일 설정
+	}
+}
+
+jacocoTestReport {
+	reports {
+		html.enabled true // HTML 보고서 활성화
+	}
+}
+
+
